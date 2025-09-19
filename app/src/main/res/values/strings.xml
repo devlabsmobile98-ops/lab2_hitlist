@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">H I T L I S T</string>
+    <string name="goNext">-></string>
+    <string name="hint">search tasks</string>
 </resources>
