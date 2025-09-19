@@ -40,44 +40,38 @@
         app:fontFamily="@font/zalando_sans_semi_expanded_black"
         app:titleTextAppearance="@font/zalando_sans_semi_expanded_black"/>
 
-    <EditText
-        android:id="@+id/Search_box"
-        android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="228dp"
-        android:ems="10"
-        android:hint="@string/hint"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.144"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
     <Button
         android:id="@+id/goNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="@string/goNext"
         android:textSize="30sp"
         app:cornerRadius="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Search_box"
-        app:layout_constraintVertical_bias="0.951" />
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="57dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="228dp"
-        app:layout_constraintBottom_toTopOf="@+id/goNext"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.578"
-        app:layout_constraintStart_toEndOf="@+id/Search_box"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.0"
+        android:layout_width="92dp"
+        android:layout_height="78dp"
+        android:layout_marginStart="300dp"
+        android:layout_marginTop="396dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
         app:srcCompat="@drawable/_675554_ic_fluent_task_list_square_icon" />
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="265dp"
+        android:layout_height="82dp"
+        android:layout_marginBottom="484dp"
+        android:hint="@string/hint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.424"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
