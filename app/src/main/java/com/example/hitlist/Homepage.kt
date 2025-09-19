@@ -1,10 +1,12 @@
 package com.example.hitlist
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class Homepage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,6 +17,24 @@ class Homepage : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        // Back Button to Launcher Page
+        val fab2: FloatingActionButton = findViewById(R.id.fab2)
+
+        fab2.setOnClickListener {
+            val intent = Intent(this, NewTask::class.java)
+            startActivity(intent)
+            overridePendingTransition(R.anim.enter_right, R.anim.leave_left)
+        }
+
+        // Button to New Task Page
+        val fab: FloatingActionButton = findViewById(R.id.fab)
+
+        fab.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(R.anim.enter_left, R.anim.leave_right)
         }
     }
 }

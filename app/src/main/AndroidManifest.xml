@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HITLIST">
         <activity
+            android:name=".NewTask"
+            android:exported="false" />
+        <activity
             android:name=".Homepage"
             android:exported="false" />
         <activity

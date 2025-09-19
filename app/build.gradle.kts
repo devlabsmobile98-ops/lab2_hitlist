@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation("com.google.android.material:material:1.11.0")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.17")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
