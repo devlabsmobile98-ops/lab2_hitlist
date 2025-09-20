@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">H I T L I S T</string>
     <string name="goNext">See all</string>
-    <string name="hint">Search your tasks...</string>
+    <string name="hint">Enter a task</string>
     <string name="homepage">What\'s left to do?</string>
     <string name="newTask">"Enter your task:</string>
+    <string name="description_hint">Enter task description</string>
 </resources>

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/display_date"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -25,23 +25,6 @@
         app:titleTextAppearance="@font/zalando_sans_semi_expanded_black"
         app:titleTextColor="@color/white" />
 
-    <EditText
-        android:id="@+id/txt_search"
-        android:layout_width="414dp"
-        android:layout_height="368dp"
-        android:background="@drawable/bar"
-        android:fontFamily="@font/zalando_sans_semi_expanded_black"
-        android:hint="@string/hint"
-        android:paddingLeft="40dp"
-        android:textColorHint="@color/hint"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:layout_constraintVertical_bias="0.19" />
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -62,15 +45,14 @@
         android:id="@+id/fab_icon3"
         android:layout_width="53dp"
         android:layout_height="66dp"
+        android:layout_marginBottom="24dp"
         android:clickable="false"
         android:src="@drawable/back_button"
         android:translationZ="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/fab3"
-        app:layout_constraintHorizontal_bias="0.518"
-        app:layout_constraintStart_toStartOf="@+id/fab3"
-        app:layout_constraintTop_toBottomOf="@+id/txt_search"
-        app:layout_constraintVertical_bias="0.854" />
+        app:layout_constraintHorizontal_bias="0.592"
+        app:layout_constraintStart_toStartOf="@+id/fab3" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab3"
@@ -78,27 +60,26 @@
         android:layout_height="80dp"
         android:layout_margin="16dp"
         android:layout_marginStart="72dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginBottom="16dp"
         app:backgroundTint="@color/fab"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/fab4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_search"
-        app:layout_constraintVertical_bias="0.907" />
+        app:layout_constraintTop_toBottomOf="@+id/description_box"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/fab_icon4"
         android:layout_width="52dp"
         android:layout_height="57dp"
+        android:layout_marginBottom="24dp"
         android:clickable="false"
         android:src="@drawable/add_task"
         android:translationZ="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/fab4"
-        app:layout_constraintHorizontal_bias="0.533"
-        app:layout_constraintStart_toStartOf="@+id/fab4"
-        app:layout_constraintTop_toBottomOf="@+id/txt_search"
-        app:layout_constraintVertical_bias="0.856" />
+        app:layout_constraintHorizontal_bias="0.535"
+        app:layout_constraintStart_toStartOf="@+id/fab4" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab4"
@@ -111,7 +92,58 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.515"
         app:layout_constraintStart_toEndOf="@+id/fab3"
-        app:layout_constraintTop_toBottomOf="@+id/txt_search"
-        app:layout_constraintVertical_bias="0.906" />
+        app:layout_constraintTop_toBottomOf="@+id/description_box"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <EditText
+        android:id="@+id/description_box"
+        android:layout_width="294dp"
+        android:layout_height="112dp"
+        android:ems="10"
+        android:hint="@string/description_hint"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.303" />
+
+    <EditText
+        android:id="@+id/input_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/hint"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/description_box"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.288"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.657" />
+
+    <ImageView
+        android:id="@+id/calendarIcon"
+        android:layout_width="62dp"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toTopOf="@+id/description_box"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.271"
+        app:layout_constraintStart_toEndOf="@+id/input_task"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.608"
+        app:srcCompat="@drawable/calendar" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="147dp"
+        android:layout_height="51dp"
+        app:layout_constraintBottom_toTopOf="@+id/fab4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.219"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_box"
+        app:layout_constraintVertical_bias="0.384" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
