@@ -27,14 +27,15 @@ class NewTask : AppCompatActivity() {
             insets
         }
 
-        // Back Button to Homepage
         val fab3: FloatingActionButton = findViewById(R.id.fab3)
+        val fab4: FloatingActionButton = findViewById(R.id.fab4)
         val calendarIcon: ImageView = findViewById(R.id.calendarIcon)
         val buttonNext: Button = findViewById(R.id.buttonNext)
         val dateShow: TextView = findViewById(R.id.dateShow)
         val input_task: EditText = findViewById(R.id.input_task)
         val description_box: EditText = findViewById(R.id.description_box)
 
+        // Back Button to Homepage
         fab3.setOnClickListener {
             val intent = Intent(this, Homepage::class.java)
             startActivity(intent)
@@ -75,5 +76,14 @@ class NewTask : AppCompatActivity() {
 
             }
         }
+
+        // Done Button to Homepage
+        fab4.setOnClickListener {
+            val intent = Intent(this, Homepage::class.java)
+            startActivity(intent)
+            overridePendingTransition(R.anim.enter_left, R.anim.leave_right)
+            finish()
+        }
+
     }
 }
