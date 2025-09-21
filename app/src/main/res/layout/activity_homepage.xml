@@ -32,17 +32,16 @@
         android:layout_width="414dp"
         android:layout_height="368dp"
         android:background="@drawable/bar"
-        android:fontFamily="@font/zalando_sans_semi_expanded_black"
         android:hint="@string/hint"
         android:paddingLeft="40dp"
         android:textColorHint="@color/hint"
-        android:textSize="14sp"
+        android:ems="10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintVertical_bias="0.263" />
 
     <TextView
         android:id="@+id/textView3"
@@ -69,10 +68,10 @@
         android:translationZ="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/fab"
-        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintStart_toStartOf="@+id/fab"
-        app:layout_constraintTop_toBottomOf="@+id/txt_search"
-        app:layout_constraintVertical_bias="0.854" />
+        app:layout_constraintTop_toTopOf="@+id/fab"
+        app:layout_constraintVertical_bias="0.145" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -91,7 +90,7 @@
     <ImageView
         android:id="@+id/fab_icon2"
         android:layout_width="52dp"
-        android:layout_height="57dp"
+        android:layout_height="64dp"
         android:clickable="false"
         android:src="@drawable/add_task"
         android:translationZ="8dp"
@@ -107,7 +106,7 @@
         android:layout_width="87dp"
         android:layout_height="80dp"
         android:layout_margin="16dp"
-        android:layout_marginBottom="120dp"
+        android:layout_marginEnd="72dp"
         app:backgroundTint="@color/fab"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

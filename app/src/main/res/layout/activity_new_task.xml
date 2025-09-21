@@ -41,19 +41,92 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.221" />
 
+    <EditText
+        android:id="@+id/description_box"
+        android:layout_width="238dp"
+        android:layout_height="93dp"
+        android:layout_marginStart="36dp"
+        android:ems="10"
+        android:hint="@string/description_hint"
+        android:inputType="textMultiLine"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/calendarIcon"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.26" />
+
+    <EditText
+        android:id="@+id/input_task"
+        android:layout_width="231dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="36dp"
+        android:ems="10"
+        android:hint="@string/hint"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/description_box"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.637" />
+
+    <ImageView
+        android:id="@+id/calendarIcon"
+        android:layout_width="67dp"
+        android:layout_height="88dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="320dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.981"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonNext"
+        app:layout_constraintVertical_bias="0.35"
+        app:srcCompat="@drawable/calendar" />
+
+    <TextView
+        android:id="@+id/dateShow"
+        android:layout_width="228dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/fab4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.196"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_box"
+        app:layout_constraintVertical_bias="0.204" />
+
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blood"
+        android:fontFamily="@font/zalando_sans_semi_expanded_black"
+        android:text="@string/next_button"
+        app:layout_constraintBottom_toTopOf="@+id/description_box"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.919"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.632" />
+
 
     <ImageView
         android:id="@+id/fab_icon3"
-        android:layout_width="53dp"
-        android:layout_height="66dp"
-        android:layout_marginBottom="48dp"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
         android:clickable="false"
         android:src="@drawable/back_button"
         android:translationZ="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/fab3"
-        app:layout_constraintHorizontal_bias="0.555"
-        app:layout_constraintStart_toStartOf="@+id/fab3" />
+        app:layout_constraintHorizontal_bias="0.518"
+        app:layout_constraintStart_toStartOf="@+id/fab3"
+        app:layout_constraintTop_toTopOf="@+id/fab3"
+        app:layout_constraintVertical_bias="0.222" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab3"
@@ -67,19 +140,21 @@
         app:layout_constraintEnd_toStartOf="@id/fab4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateShow"
-        app:layout_constraintVertical_bias="0.834" />
+        app:layout_constraintVertical_bias="0.88" />
 
     <ImageView
         android:id="@+id/fab_icon4"
-        android:layout_width="52dp"
-        android:layout_height="57dp"
-        android:layout_marginBottom="44dp"
+        android:layout_width="55dp"
+        android:layout_height="58dp"
         android:clickable="false"
-        android:src="@drawable/add_task"
+        android:src="@drawable/checkmark2"
         android:translationZ="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/fab4"
-        app:layout_constraintStart_toStartOf="@+id/fab4" />
+        app:layout_constraintHorizontal_bias="0.56"
+        app:layout_constraintStart_toStartOf="@+id/fab4"
+        app:layout_constraintTop_toTopOf="@+id/fab4"
+        app:layout_constraintVertical_bias="0.19" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab4"
@@ -87,79 +162,12 @@
         android:layout_height="80dp"
         android:layout_margin="16dp"
         android:layout_marginEnd="72dp"
-        android:layout_marginBottom="20dp"
         app:backgroundTint="@color/fab"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.515"
         app:layout_constraintStart_toEndOf="@+id/fab3"
         app:layout_constraintTop_toBottomOf="@+id/description_box"
-        app:layout_constraintVertical_bias="0.9" />
-
-    <EditText
-        android:id="@+id/description_box"
-        android:layout_width="238dp"
-        android:layout_height="93dp"
-        android:layout_marginStart="36dp"
-        android:ems="10"
-        android:hint="@string/description_hint"
-        android:inputType="textMultiLine"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.284" />
-
-    <EditText
-        android:id="@+id/input_task"
-        android:layout_width="231dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="36dp"
-        android:ems="10"
-        android:hint="@string/hint"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/description_box"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.649" />
-
-    <ImageView
-        android:id="@+id/calendarIcon"
-        android:layout_width="75dp"
-        android:layout_height="71dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="320dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.964"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.8"
-        app:srcCompat="@drawable/calendar" />
-
-    <TextView
-        android:id="@+id/dateShow"
-        android:layout_width="147dp"
-        android:layout_height="51dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/fab4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.136"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description_box"
-        app:layout_constraintVertical_bias="0.225" />
-
-    <Button
-        android:id="@+id/buttonNext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next_button"
-        app:layout_constraintBottom_toTopOf="@+id/description_box"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.919"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.632" />
+        app:layout_constraintVertical_bias="0.918" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

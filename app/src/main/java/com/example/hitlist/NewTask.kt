@@ -29,11 +29,11 @@ class NewTask : AppCompatActivity() {
 
         // Back Button to Homepage
         val fab3: FloatingActionButton = findViewById(R.id.fab3)
-        val calendarIcon: ImageView=findViewById(R.id.calendarIcon)
-        val buttonNext: Button=findViewById(R.id.buttonNext)
-        val dateShow: TextView=findViewById(R.id.dateShow)
-        val input_task: EditText=findViewById(R.id.input_task)
-        val description_box: EditText=findViewById(R.id.description_box)
+        val calendarIcon: ImageView = findViewById(R.id.calendarIcon)
+        val buttonNext: Button = findViewById(R.id.buttonNext)
+        val dateShow: TextView = findViewById(R.id.dateShow)
+        val input_task: EditText = findViewById(R.id.input_task)
+        val description_box: EditText = findViewById(R.id.description_box)
 
         fab3.setOnClickListener {
             val intent = Intent(this, Homepage::class.java)
@@ -41,13 +41,15 @@ class NewTask : AppCompatActivity() {
             overridePendingTransition(R.anim.enter_left, R.anim.leave_right)
         }
 
+        // New Task is entered and trigger visibility when "Next" is pressed
         buttonNext.setOnClickListener {
             val task = input_task.text.toString()
 
+            // Warning if task name is empty
             if (task.isNotEmpty()) {
                 description_box.visibility = View.VISIBLE
                 description_box.requestFocus()
-                calendarIcon.visibility= View.VISIBLE
+                calendarIcon.visibility = View.VISIBLE
             } else {
                 Toast.makeText(this, "Please enter a task first", Toast.LENGTH_SHORT).show()
             }
@@ -57,11 +59,11 @@ class NewTask : AppCompatActivity() {
                 val month = cal.get(Calendar.MONTH)
                 val day = cal.get(Calendar.DAY_OF_MONTH)
 
-
+                // Handles calendar date selected for deadline (dateShow)
                 val datePicker = DatePickerDialog(
                     this,
                     { _, selectedYear, selectedMonth, selectedDay ->
-                        val date = "Date selected: $selectedDay/${selectedMonth + 1}/$selectedYear"
+                        val date = "Deadline: $selectedDay/${selectedMonth + 1}/$selectedYear"
                         dateShow.text = date
                         dateShow.visibility = View.VISIBLE
                     },
@@ -71,8 +73,7 @@ class NewTask : AppCompatActivity() {
                 )
                 datePicker.show()
 
+            }
         }
-
     }
-        }}
-
+}
