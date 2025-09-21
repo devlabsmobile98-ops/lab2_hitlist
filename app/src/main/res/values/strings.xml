@@ -5,4 +5,5 @@
     <string name="homepage">What\'s left to do?</string>
     <string name="newTask">"Enter your task:</string>
     <string name="description_hint">Enter task description</string>
+    <string name="next_button">Next</string>
 </resources>
