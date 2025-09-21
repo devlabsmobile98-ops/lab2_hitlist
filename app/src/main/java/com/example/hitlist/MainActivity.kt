@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         imageButton5.setOnClickListener {
             val intent = Intent(this, Homepage::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.enter_right, R.anim.leave_left)
         }
     }
 }

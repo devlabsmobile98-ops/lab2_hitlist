@@ -20,6 +20,15 @@ class Homepage : AppCompatActivity() {
         }
 
         // Back Button to Launcher Page
+        val fab: FloatingActionButton = findViewById(R.id.fab)
+
+        fab.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(R.anim.enter_left, R.anim.leave_right)
+        }
+
+        // Add Task Button to New Task Page
         val fab2: FloatingActionButton = findViewById(R.id.fab2)
 
         fab2.setOnClickListener {
@@ -28,13 +37,5 @@ class Homepage : AppCompatActivity() {
             overridePendingTransition(R.anim.enter_right, R.anim.leave_left)
         }
 
-        // Button to New Task Page
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-
-        fab.setOnClickListener {
-            val intent = Intent(this, NewTask::class.java)
-            startActivity(intent)
-            overridePendingTransition(R.anim.enter_left, R.anim.leave_right)
-        }
     }
 }
