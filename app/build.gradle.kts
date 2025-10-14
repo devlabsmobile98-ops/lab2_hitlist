@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.example.hitlist"
         minSdk = 21
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -26,24 +26,31 @@ android {
             )
         }
     }
+
+    // AGP 8.x likes JDK 17
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
 dependencies {
-
+    // AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("com.google.android.material:material:1.11.0")
+
+    // Material 3 via version catalog (make sure libs.versions.toml has material = "1.12.0")
+    implementation(libs.material)
+
+    // (Your gif lib)
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.17")
+
+    // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
