@@ -12,7 +12,7 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="411dp"
+        android:layout_width="0dp"
         android:layout_height="84dp"
         android:background="#484848"
         android:fontFamily="@font/zalando_sans_semi_expanded_black"
@@ -20,9 +20,10 @@
         android:theme="?attr/actionBarTheme"
         app:fontFamily="@font/zalando_sans_semi_expanded_black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="1.0"
         app:title="@string/app_name"
         app:titleTextAppearance="@font/zalando_sans_semi_expanded_black"
         app:titleTextColor="@color/white" />
