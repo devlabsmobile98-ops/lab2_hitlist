@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="colorRow" type="id" />
+    <item name="colorGroup" type="id" />
+    <item name="colorRed" type="id" />
+    <item name="colorOrange" type="id" />
+    <item name="colorGreen" type="id" />
+    <item name="colorBlue" type="id" />
+    <item name="colorPurple" type="id" />
+    <item name="colorPink" type="id" />
+    <item name="customColorBtn" type="id" />
+</resources>

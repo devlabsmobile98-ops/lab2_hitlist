@@ -28,12 +28,6 @@
         app:titleTextAppearance="@font/zalando_sans_semi_expanded_black"
         app:titleTextColor="@color/white" />
 
-    <!-- Screen title -->
-
-    <!-- Task title input -->
-
-    <!-- Next button -->
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -42,13 +36,16 @@
         android:fontFamily="@font/zalando_sans_semi_expanded_black"
         android:text="@string/newTask"
         android:textSize="30sp"
+        android:visibility="visible"
         app:fontFamily="@font/zalando_sans_semi_expanded_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <!-- Color swatches + custom picker button (hidden until you reveal) -->
+    <!-- Color swatches (hidden until you reveal) -->
+
+    <!-- Pick color (hidden initially) -->
 
     <!-- Description (hidden initially) -->
 
@@ -62,6 +59,7 @@
         android:ems="10"
         android:hint="@string/hint"
         android:inputType="text"
+        android:fontFamily="@font/zalando_sans_semi_expanded_black"
         app:layout_constraintEnd_toStartOf="@+id/buttonNext"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -80,15 +78,47 @@
         app:layout_constraintTop_toTopOf="@+id/input_task"
         app:layout_constraintVertical_bias="0.0" />
 
+    <EditText
+        android:id="@+id/description_box"
+        android:layout_width="0dp"
+        android:layout_height="93dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="@string/description_hint"
+        android:fontFamily="@font/zalando_sans_semi_expanded_black"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/calendarIcon"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorRow" />
+
+    <TextView
+        android:id="@+id/pickColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/zalando_sans_semi_expanded_black"
+        android:text="@string/color"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/colorRow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_task" />
+
     <LinearLayout
         android:id="@+id/colorRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="72dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.236"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_task">
 
@@ -104,7 +134,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="Red"
-                android:tag="@color/task_red"
+                android:tag="red"
                 app:backgroundTint="@color/task_red"
                 app:cornerRadius="20dp" />
 
@@ -114,7 +144,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="Orange"
-                android:tag="@color/task_orange"
+                android:tag="orange"
                 app:backgroundTint="@color/task_orange"
                 app:cornerRadius="20dp" />
 
@@ -124,7 +154,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="Green"
-                android:tag="@color/task_green"
+                android:tag="green"
                 app:backgroundTint="@color/task_green"
                 app:cornerRadius="20dp" />
 
@@ -134,42 +164,44 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:contentDescription="Blue"
-                android:tag="@color/task_blue"
+                android:tag="blue"
                 app:backgroundTint="@color/task_blue"
                 app:cornerRadius="20dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/colorPink"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="Pink"
+                android:tag="pink"
+                app:backgroundTint="@color/task_pink"
+                app:cornerRadius="20dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/colorPurple"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="Purple"
+                android:tag="purple"
+                app:backgroundTint="@color/task_purple"
+                app:cornerRadius="20dp" />
+
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/customColorBtn"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginStart="12dp"
-            android:contentDescription="Choose custom color"
-            android:minWidth="0dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="Picker"
-            app:icon="@android:drawable/ic_menu_edit"
-            app:iconGravity="textStart" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/description_box"
-        android:layout_width="0dp"
-        android:layout_height="93dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/description_hint"
-        android:inputType="textMultiLine"
-        android:maxLines="4"
+    <TextView
+        android:id="@+id/dateShow"
+        android:layout_width="309dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="76dp"
+        android:textSize="18sp"
         android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/calendarIcon"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/colorRow" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_box" />
 
     <ImageView
         android:id="@+id/calendarIcon"
@@ -180,22 +212,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/description_box"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/description_box"
+        app:layout_constraintVertical_bias="0.257"
         app:srcCompat="@drawable/calendar" />
 
     <!-- Deadline text (hidden initially) -->
 
     <!-- Back FAB -->
-
-    <TextView
-        android:id="@+id/dateShow"
-        android:layout_width="309dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="76dp"
-        android:textSize="18sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description_box" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab3"
@@ -250,7 +272,5 @@
         app:layout_constraintTop_toTopOf="@+id/fab4"
         app:layout_constraintStart_toStartOf="@+id/fab4"
         app:layout_constraintEnd_toEndOf="@+id/fab4" />
-
-    <!-- (Optional) standalone image you had; keep or remove -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

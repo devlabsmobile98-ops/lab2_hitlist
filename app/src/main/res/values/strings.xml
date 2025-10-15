@@ -3,6 +3,7 @@
     <string name="homepage">What\'s left to do?</string>
     <string name="newTask">"New Task:</string>
     <string name="hint">Enter a task</string>
+    <string name="color">Pick a color:</string>
     <string name="description_hint">Enter task description</string>
     <string name="next_button">Next</string>
 </resources>
