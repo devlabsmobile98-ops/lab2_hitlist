@@ -6,9 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".Homepage"
-    tools:layout_editor_absoluteX="137dp"
-    tools:layout_editor_absoluteY="-132dp">
+    tools:context=".Homepage">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -28,22 +26,6 @@
         app:titleTextAppearance="@font/zalando_sans_semi_expanded_black"
         app:titleTextColor="@color/white" />
 
-    <EditText
-        android:id="@+id/txt_search"
-        android:layout_width="414dp"
-        android:layout_height="368dp"
-        android:background="@drawable/bar"
-        android:hint="@string/hint"
-        android:paddingLeft="40dp"
-        android:textColorHint="@color/hint"
-        android:ems="10"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:layout_constraintVertical_bias="0.263" />
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -52,13 +34,52 @@
         android:text="@string/homepage"
         android:textSize="30sp"
         app:fontFamily="@font/zalando_sans_semi_expanded_black"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.221" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_marginTop="24dp" />
 
+    <EditText
+        android:id="@+id/txt_search"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/search_bar_background"
+        android:hint="Search tasks..."
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/hint"
+        android:fontFamily="@font/zalando_sans_semi_expanded_black"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tasksRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_search" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="87dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginBottom="52dp"
+        app:backgroundTint="@color/fab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/fab2"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/fab_icon"
@@ -67,26 +88,21 @@
         android:clickable="false"
         android:src="@drawable/back_button"
         android:translationZ="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fab"
         app:layout_constraintEnd_toEndOf="@+id/fab"
-        app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintStart_toStartOf="@+id/fab"
-        app:layout_constraintTop_toTopOf="@+id/fab"
-        app:layout_constraintVertical_bias="0.145" />
+        app:layout_constraintTop_toTopOf="@+id/fab" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab2"
         android:layout_width="87dp"
         android:layout_height="80dp"
-        android:layout_margin="16dp"
-        android:layout_marginStart="72dp"
+        android:layout_marginEnd="72dp"
         android:layout_marginBottom="52dp"
         app:backgroundTint="@color/fab"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_search"
-        app:layout_constraintVertical_bias="0.907" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fab" />
 
     <ImageView
         android:id="@+id/fab_icon2"
@@ -95,25 +111,9 @@
         android:clickable="false"
         android:src="@drawable/add_task"
         android:translationZ="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fab2"
         app:layout_constraintEnd_toEndOf="@+id/fab2"
-        app:layout_constraintHorizontal_bias="0.533"
         app:layout_constraintStart_toStartOf="@+id/fab2"
-        app:layout_constraintTop_toBottomOf="@+id/txt_search"
-        app:layout_constraintVertical_bias="0.856" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab2"
-        android:layout_width="87dp"
-        android:layout_height="80dp"
-        android:layout_margin="16dp"
-        android:layout_marginEnd="72dp"
-        app:backgroundTint="@color/fab"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toEndOf="@+id/fab"
-        app:layout_constraintTop_toBottomOf="@+id/txt_search"
-        app:layout_constraintVertical_bias="0.906" />
+        app:layout_constraintTop_toTopOf="@+id/fab2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,16 +1,15 @@
 package com.example.hitlist
 
-import android.content.ContentValues // Import ContentValues for dynamic insertion into SQLite Database
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class TaskDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
-    // Use Companion Object to store constants for database
     companion object {
         private const val DATABASE_NAME = "TaskDatabase.db"
-        private const val DATABASE_VERSION = 4 // Update database version every time changes to schema are made
+        private const val DATABASE_VERSION = 4
         private const val TABLE_NAME = "Tasks"
         private const val COLUMN_ID = "id"
         private const val COLUMN_TITLE = "title"
@@ -19,7 +18,6 @@ class TaskDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         private const val COLUMN_DEADLINE = "deadline"
     }
 
-    // OnCreate function to create the database table for tasks. Title cannot be empty.
     override fun onCreate(db: SQLiteDatabase?) {
         val createTableQuery = "CREATE TABLE $TABLE_NAME (" +
                 "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -30,15 +28,12 @@ class TaskDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         db?.execSQL(createTableQuery)
     }
 
-    // OnUpgrade to recreate database if need be. Recreate table if schema changes.
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
 
-    // AddTask function to insert task name, description, color (as string), and deadline into "Tasks" table
-    // Insert from NewTask.
-    fun addTask(title: String, description: String, color: String, deadline: String) {
+    fun addTask(title: String, description: String, color: String, deadline: String): Long {
         val db = this.writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_TITLE, title)
@@ -46,25 +41,51 @@ class TaskDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
             put(COLUMN_COLOR, color)
             put(COLUMN_DEADLINE, deadline)
         }
-        db.insert(TABLE_NAME, null, values)
+        val result = db.insert(TABLE_NAME, null, values)
         db.close()
+        return result
     }
 
-    // GetTask function to retrieve task details from "Tasks" table.
-    // Retrieve for Homepage.
-    fun getTask(): List<String> {
-        val taskList = mutableListOf<String>()
+    // NEW: Get all tasks as Task objects
+    fun getAllTasks(): List<Task> {
+        val taskList = mutableListOf<Task>()
         val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_ID DESC", null)
 
         if (cursor.moveToFirst()) {
             do {
-                val titleIndex = cursor.getColumnIndex(COLUMN_TITLE)
-                // Check if column exists
-                if (titleIndex != -1) {
-                    val title = cursor.getString(titleIndex)
-                    taskList.add(title)
-                }
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))
+                val title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
+                val color = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COLOR))
+                val deadline = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DEADLINE))
+
+                taskList.add(Task(id, title, description, color, deadline))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return taskList
+    }
+
+    // NEW: Search tasks by title
+    fun searchTasks(query: String): List<Task> {
+        val taskList = mutableListOf<Task>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM $TABLE_NAME WHERE $COLUMN_TITLE LIKE ? ORDER BY $COLUMN_ID DESC",
+            arrayOf("%$query%")
+        )
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))
+                val title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
+                val color = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COLOR))
+                val deadline = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DEADLINE))
+
+                taskList.add(Task(id, title, description, color, deadline))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -72,3 +93,12 @@ class TaskDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         return taskList
     }
 }
+
+// NEW: Task data class to represent a task
+data class Task(
+    val id: Long,
+    val title: String,
+    val description: String,
+    val color: String,
+    val deadline: String
+)

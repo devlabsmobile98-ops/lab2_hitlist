@@ -43,7 +43,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.cardview:cardview:1.0.0")
     // Material 3 via version catalog (make sure libs.versions.toml has material = "1.12.0")
     implementation(libs.material)
 
