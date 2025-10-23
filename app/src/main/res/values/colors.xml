@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ADDED: Basic colors needed for layouts -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="toolbar">#484848</color>
-    <color name="hint">#dedede</color>
-    <color name="fab">#d4d4d4</color>
-    <color name="blood">#a40202</color>
-    <color name="task_red">#ff0000</color>
-    <color name="task_orange">#ff8c00</color>
-    <color name="task_green">#008000</color>
-    <color name="task_blue">#0000cd</color>
-    <color name="task_pink">#fe019a</color>
-    <color name="task_purple">#800080</color>
+    <color name="hint">#808080</color> <!-- A standard grey for hint text -->
+    <color name="fab">#009688</color>  <!-- A nice teal color for buttons -->
+
+    <!-- Existing colors for notes -->
+    <color name="default_note_light">#FFFFFF</color>
+    <color name="default_note_dark">#F0F0F0</color>
+
+    <color name="red_note_light">#FFCDD2</color>
+    <color name="red_note_dark">#E57373</color>
+
+    <color name="orange_note_light">#FFCCBC</color>
+    <color name="orange_note_dark">#FF8A65</color>
+
+    <color name="yellow_note_light">#FFF9C4</color>
+    <color name="yellow_note_dark">#FFF176</color>
+
+    <color name="green_note_light">#C8E6C9</color>
+    <color name="green_note_dark">#81C784</color>
+
+    <color name="blue_note_light">#BBDEFB</color>
+    <color name="blue_note_dark">#64B5F6</color>
 </resources>

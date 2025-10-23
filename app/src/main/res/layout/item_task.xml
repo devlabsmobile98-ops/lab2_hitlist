@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The root view is a CardView, which provides the rounded corners and shadow effect,
+    making each task item look like a physical card.
+-->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/taskCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <!--
+        A vertical LinearLayout is used as the main container inside the card to stack the
+        title bar and the content area on top of each other.
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--
+            This horizontal LinearLayout acts as the title bar. Its background will be colored
+            programmatically with the darker shade of the task's color.
+            - 'gravity="center_vertical"' is crucial for vertically aligning the title text and the
+              delete button, especially if the title wraps to multiple lines.
+        -->
+        <LinearLayout
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
+
+            <!--
+                The TextView for the task's title.
+                - 'layout_weight="1"' makes this view expand to take up all available horizontal space
+                  not used by the delete button. This is essential for proper alignment.
+                - 'maxLines="2"' and 'ellipsize="end"' prevent a very long title from making the
+                  card too tall. It will show "..." if the title exceeds two lines.
+                - 'tools:text' provides placeholder text visible only in the layout preview.
+            -->
+            <TextView
+                android:id="@+id/taskTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:fontFamily="@font/zalando_sans_semi_expanded_black"
+                android:maxLines="2"
+                android:paddingVertical="8dp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="This is a very long task title that might wrap to a second line" />
+
+            <!--
+                The delete button for the task.
+                - It's an ImageButton because we only need an icon, not text.
+                - 'background="?attr/selectableItemBackgroundBorderless"' gives it a ripple effect on click
+                  without a visible background.
+                - 'app:tint' colors the delete icon itself (in this case, black).
+            -->
+            <ImageButton
+                android:id="@+id/deleteButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Delete Task"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="@android:color/black" />
+        </LinearLayout>
+
+        <!--
+            This LinearLayout contains the description and deadline, sitting below the title bar.
+            Its background will be the light shade of the task's color, set on the parent CardView.
+        -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="16dp">
+
+            <!--
+                The TextView for the task's description.
+                - Its text color is set to black for better readability against the colored backgrounds.
+            -->
+            <TextView
+                android:id="@+id/taskDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                tools:text="This is the description of the task, which can also be quite long and take up multiple lines of space within the content area." />
+
+            <!--
+                The TextView for the task's deadline.
+                - It's styled with a distinct color and italic bold text to make it stand out as important information.
+                - 'layout_marginTop' provides spacing between it and the description above.
+            -->
+            <TextView
+                android:id="@+id/taskDeadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="#C62828"
+                android:textSize="12sp"
+                android:textStyle="bold|italic"
+                tools:text="Deadline: 10/22/2025" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

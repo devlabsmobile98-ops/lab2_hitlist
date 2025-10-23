@@ -33,7 +33,7 @@ class TaskDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         onCreate(db)
     }
 
-    fun addTask(title: String, description: String, color: String, deadline: String): Long {
+    fun addTask(title: String, description: String, color: String, deadline: String?): Long {
         val db = this.writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_TITLE, title)
@@ -92,13 +92,10 @@ class TaskDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         db.close()
         return taskList
     }
+    // DELETE tasks
+    fun deleteTask(taskId: Long) {
+        val db = this.writableDatabase
+        db.delete(TABLE_NAME, "$COLUMN_ID = ?", arrayOf(taskId.toString()))
+        db.close()
+    }
 }
-
-// NEW: Task data class to represent a task
-data class Task(
-    val id: Long,
-    val title: String,
-    val description: String,
-    val color: String,
-    val deadline: String
-)

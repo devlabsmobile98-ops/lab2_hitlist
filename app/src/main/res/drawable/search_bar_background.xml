@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Sets the background color of the search bar -->
+    <solid android:color="#F0F0F0" />  <!-- A light gray color -->
+
+    <!-- Sets the corner radius to make them rounded -->
+    <corners android:radius="16dp" />
+
+</shape>

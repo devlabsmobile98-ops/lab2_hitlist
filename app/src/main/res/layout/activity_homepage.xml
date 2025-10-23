@@ -1,119 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    The root layout is a ConstraintLayout, which is a powerful and flexible layout that allows you
+    to create complex UIs with a flat view hierarchy. It positions and sizes child views relative
+    to each other and to the parent layout.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/display_date"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".Homepage">
 
+    <!--
+        The Toolbar acts as the app bar at the top of the screen.
+        It's constrained to the top, left, and right edges of the parent layout.
+    -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="84dp"
+        android:layout_height="wrap_content"
         android:background="#484848"
-        android:fontFamily="@font/zalando_sans_semi_expanded_black"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:fontFamily="@font/zalando_sans_semi_expanded_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_default="percent"
-        app:layout_constraintWidth_percent="1.0"
         app:title="@string/app_name"
-        app:titleTextAppearance="@font/zalando_sans_semi_expanded_black"
         app:titleTextColor="@color/white" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/zalando_sans_semi_expanded_black"
-        android:text="@string/homepage"
-        android:textSize="30sp"
-        app:fontFamily="@font/zalando_sans_semi_expanded_black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:layout_marginTop="24dp" />
-
-    <EditText
-        android:id="@+id/txt_search"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/search_bar_background"
-        android:hint="Search tasks..."
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textColor="@color/black"
-        android:textColorHint="@color/hint"
-        android:fontFamily="@font/zalando_sans_semi_expanded_black"
-        android:gravity="center_vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tasksRecyclerView"
+    <!--
+        A ScrollView is used to make the content area scrollable. This is crucial for ensuring
+        that all content is accessible on smaller screens or when the task list is long.
+        - 'fillViewport="true"' allows the child layout to fill the ScrollView's height if the content is short.
+        - It's constrained between the bottom of the toolbar and the top of the "Add New Task" button.
+    -->
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/addNewTaskButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_search" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="87dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginBottom="52dp"
-        app:backgroundTint="@color/fab"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab2"
-        app:layout_constraintStart_toStartOf="parent" />
+        <!--
+            A nested ConstraintLayout holds the content inside the ScrollView. This allows us to
+            continue using constraints for positioning the header, search bar, and RecyclerView.
+        -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/fab_icon"
-        android:layout_width="53dp"
-        android:layout_height="66dp"
-        android:clickable="false"
-        android:src="@drawable/back_button"
-        android:translationZ="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/fab"
-        app:layout_constraintEnd_toEndOf="@+id/fab"
-        app:layout_constraintStart_toStartOf="@+id/fab"
-        app:layout_constraintTop_toTopOf="@+id/fab" />
+            <!--
+                The main header text for the homepage.
+                - 'fontFamily' applies a custom font for styling.
+                - It's constrained to the top of its parent (the nested ConstraintLayout).
+            -->
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/zalando_sans_semi_expanded_black"
+                android:text="@string/homepage"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab2"
-        android:layout_width="87dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="72dp"
-        android:layout_marginBottom="52dp"
-        app:backgroundTint="@color/fab"
+            <!--
+                The search bar, implemented as an EditText.
+                - 'background' points to a custom drawable for the rounded rectangle shape.
+                - 'hint' provides placeholder text.
+                - 'paddingStart' gives space between the text and the left edge.
+                - It's constrained below the header text.
+            -->
+            <EditText
+                android:id="@+id/searchView"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/search_bar_background"
+                android:hint="Search tasks..."
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <!--
+                The RecyclerView is the core component for displaying the list of tasks efficiently.
+                - It's constrained below the search view and to the bottom of its parent layout,
+                  allowing it to fill the remaining vertical space.
+            -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tasksRecyclerView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/searchView"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <!--
+        The "Add New Task" button, anchored to the bottom of the main screen.
+        - 'layout_width="0dp"' with start/end constraints makes it stretch horizontally.
+        - 'backgroundTint' sets the button's color.
+        - 'paddingVertical' increases the button's height and touch area.
+        - It is outside the ScrollView so it always stays visible at the bottom.
+    -->
+    <Button
+        android:id="@+id/addNewTaskButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:backgroundTint="@color/fab"
+        android:paddingVertical="16dp"
+        android:text="Add New Task"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fab" />
-
-    <ImageView
-        android:id="@+id/fab_icon2"
-        android:layout_width="52dp"
-        android:layout_height="64dp"
-        android:clickable="false"
-        android:src="@drawable/add_task"
-        android:translationZ="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/fab2"
-        app:layout_constraintEnd_toEndOf="@+id/fab2"
-        app:layout_constraintStart_toStartOf="@+id/fab2"
-        app:layout_constraintTop_toTopOf="@+id/fab2" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
