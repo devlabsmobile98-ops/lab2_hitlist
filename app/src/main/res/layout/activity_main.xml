@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    This is the layout for the initial splash screen (MainActivity).
+    The root is a ConstraintLayout, used here to center content on the screen.
+    The ID 'display_date' is used in MainActivity to handle window insets for edge-to-edge display.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,10 +13,15 @@
     android:background="@color/white"
     tools:context=".MainActivity">
 
+    <!--
+        This ImageButton serves as a large, clickable background image.
+        - 'scaleType="centerInside"' ensures the entire image is visible, scaled down if necessary.
+        - It's constrained to all four sides of the parent, effectively filling the screen.
+    -->
     <ImageButton
         android:id="@+id/imageButton5"
-        android:layout_width="1320dp"
-        android:layout_height="1380dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,45 +29,52 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/launchericon" />
 
+    <!-- A sub-heading or instructional text, centered horizontally. -->
     <TextView
         android:id="@+id/textView"
-        android:layout_width="392dp"
-        android:layout_height="131dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="340dp"
         android:fontFamily="@font/zalando_sans_semi_expanded_black"
         android:gravity="center"
         android:text="click to begin the ultimate to-do."
         android:textSize="30sp"
-        app:fontFamily="@font/zalando_sans_semi_expanded_black"
         app:layout_constraintBottom_toBottomOf="@+id/imageButton5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- The main "H I T L I S T" title text, styled to be prominent. -->
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="562dp"
-        android:layout_height="147dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/zalando_sans_semi_expanded_black"
         android:gravity="center"
         android:text="H I T L I S T"
         android:textSize="65sp"
-        app:fontFamily="@font/zalando_sans_semi_expanded_black"
-        android:shadowColor="#80000000"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton5"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageButton5"
-        app:layout_constraintVertical_bias="0.275" />
+        app:layout_constraintVertical_bias="0.45" />
 
 
+    <!--
+        A GifImageView to display an animated GIF.
+        - This uses the 'pl.droidsonroids.gif:android-gif-drawable' library.
+    -->
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/imageView"
-        android:layout_width="419dp"
+        android:layout_width="0dp"
         android:layout_height="348dp"
-        android:layout_marginBottom="292dp"
         android:src="@drawable/blood"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

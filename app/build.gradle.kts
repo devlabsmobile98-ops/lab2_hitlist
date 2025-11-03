@@ -51,7 +51,7 @@ dependencies {
     // (Your gif lib)
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.17")
 
-    // --- FIX APPLIED HERE: Use the version catalog reference for Glide ---
+    // --- Use the version catalog reference for Glide ---
     implementation(libs.glide)
 
     // Test

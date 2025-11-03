@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    This CardView acts as the root container for a single task item.
+    - CardView provides a consistent look with rounded corners and shadow (elevation).
+    - layout_width="match_parent" makes it take the full width of the RecyclerView.
+    - layout_height="wrap_content" makes its height adjust based on its content.
+-->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,13 +17,23 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
+    <!--
+        A ConstraintLayout is used inside the CardView to allow for complex
+        and flexible positioning of child views relative to each other. This is
+        key for handling the dynamic visibility of the image preview.
+    -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- This is the ImageView for the preview. It is unchanged and correctly
-             anchored to the bottom-right. It will now act as the primary guide
-             for the card's height when an image is present. -->
+        <!--
+            The ImageView for the task's image preview.
+            - It is constrained to the bottom and end (right) of the parent CardView.
+            - 'android:visibility="gone"' makes it hidden by default. It will be made
+              visible programmatically in the TaskAdapter if the task has an image.
+            - 'tools:visibility="visible"' is a design-time attribute that makes the view
+              visible in the Android Studio previewer, which helps with layout design.
+        -->
         <ImageView
             android:id="@+id/taskImagePreview"
             android:layout_width="60dp"
@@ -31,10 +47,12 @@
             tools:visibility="visible" />
 
         <!--
-            *** FIX #1 APPLIED HERE ***
-            The bottom of the titleBar is now constrained to the TOP of the image preview.
-            This ensures that the title bar and image preview will never overlap and that
-            the card will expand vertically to fit the image.
+            This LinearLayout serves as the colored title bar for the task.
+            - Its bottom is constrained to the TOP of the image preview. This is the
+              critical constraint that prevents overlap and ensures the card expands
+              vertically to fit the image.
+            - The 'layout_marginBottom' creates a visual space between the title bar
+              and the content area below it.
         -->
         <LinearLayout
             android:id="@+id/titleBar"
@@ -51,9 +69,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0">
 
-
-
-
+            <!-- The TextView for the task's title. 'layout_weight="1"' allows it to
+                 fill all available space next to the delete button. -->
             <TextView
                 android:id="@+id/taskTitle"
                 android:layout_width="0dp"
@@ -68,6 +85,7 @@
                 android:textStyle="bold"
                 tools:text="This is a very long task title" />
 
+            <!-- The delete button (trash can icon) for the task. -->
             <ImageButton
                 android:id="@+id/deleteButton"
                 android:layout_width="30dp"
@@ -80,23 +98,26 @@
         </LinearLayout>
 
         <!--
-            *** FIX #2 APPLIED HERE ***
-            The contentLayout is now constrained between the titleBar and the bottom of the parent.
-            This ensures it fills the space correctly next to the image preview.
+            This LinearLayout holds the description and deadline text.
+            - 'layout_height="0dp"' allows it to fill the constrained space.
+            - It is constrained between the bottom of the titleBar and the bottom of the parent.
+            - Its end is constrained to the start of the image preview, ensuring the text
+              wraps and never overlaps with the image.
         -->
         <LinearLayout
             android:id="@+id/contentLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp"
-            android:gravity="center_vertical"
-            app:layout_constraintTop_toBottomOf="@id/titleBar"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/taskImagePreview">
+            app:layout_constraintEnd_toStartOf="@id/taskImagePreview"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleBar">
 
+            <!-- TextView for the task's description. -->
             <TextView
                 android:id="@+id/taskDescription"
                 android:layout_width="match_parent"
@@ -105,6 +126,7 @@
                 android:textSize="14sp"
                 tools:text="This is the description of the task." />
 
+            <!-- TextView for the task's deadline. Its visibility is controlled programmatically. -->
             <TextView
                 android:id="@+id/taskDeadline"
                 android:layout_width="wrap_content"

@@ -73,7 +73,6 @@
                 The search bar, implemented as an EditText.
                 - 'background' points to a custom drawable for the rounded rectangle shape.
                 - 'hint' provides placeholder text.
-                - 'paddingStart' gives space between the text and the left edge.
                 - It's constrained below the header text.
             -->
             <EditText
@@ -95,8 +94,8 @@
 
             <!--
                 The RecyclerView is the core component for displaying the list of tasks efficiently.
-                - It's constrained below the search view and to the bottom of its parent layout,
-                  allowing it to fill the remaining vertical space.
+                - 'layout_height="0dp"' allows it to fill the available vertical space defined by its constraints.
+                - It's constrained below the search view and to the bottom of its parent layout.
             -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tasksRecyclerView"
@@ -114,9 +113,7 @@
     <!--
         The "Add New Task" button, anchored to the bottom of the main screen.
         - 'layout_width="0dp"' with start/end constraints makes it stretch horizontally.
-        - 'backgroundTint' sets the button's color.
-        - 'paddingVertical' increases the button's height and touch area.
-        - It is outside the ScrollView so it always stays visible at the bottom.
+        - It is outside the ScrollView so it always stays visible at the bottom, regardless of scrolling.
     -->
     <Button
         android:id="@+id/addNewTaskButton"

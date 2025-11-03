@@ -21,6 +21,10 @@ package com.example.hitlist
  * @property color A string representing the background color of the task's sticky note.
  *                 This is stored as a hex string (e.g., "#FFCDD2") for easy parsing.
  * @property deadline A string representing the due date for the task (e.g., "12/25/2025").
+ * @property imageUri A nullable String that holds the URI (Uniform Resource Identifier) for an
+ *                    image associated with the task. A URI is a persistent reference to the
+ *                    image file stored on the device. It's nullable because a task might not
+ *                    have an image.
  */
 data class Task(
     val id: Long,
@@ -28,5 +32,5 @@ data class Task(
     val description: String,
     val color: String?, // The '?' makes this property nullable, meaning it can hold a null value if no color is set.
     val deadline: String?, // This is also nullable in case a task is created without a deadline.
-    val imageUri: String? // to hold the image data
-) : java.io.Serializable // This allows us to pass Task objects between activities
+    val imageUri: String? // Nullable because not all tasks will have an image.
+) : java.io.Serializable // This allows us to pass Task objects between activities using Intent extras.

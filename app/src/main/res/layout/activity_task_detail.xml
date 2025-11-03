@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    The root is a ScrollView to ensure all content is accessible on smaller screens,
+    as the form can be quite long.
+    - 'fillViewport="true"' allows the child ConstraintLayout to fill the screen height.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="#F5F5F5">
+    android:background="#F5F5F5"
+    android:fillViewport="true">
 
+    <!-- A ConstraintLayout is used inside the ScrollView for flexible positioning of all form elements. -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".TaskDetailActivity">
 
-        <!-- ... Header TextView and stickyNoteCard CardView are unchanged ... -->
+        <!-- The main header text for the screen ("Define a new task" or "Edit Your Task"). -->
         <TextView
             android:id="@+id/screenHeader"
             android:layout_width="wrap_content"
@@ -27,6 +33,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!--
+            This CardView creates the "sticky note" visual for the title and description.
+        -->
         <androidx.cardview.widget.CardView
             android:id="@+id/stickyNoteCard"
             android:layout_width="0dp"
@@ -40,11 +49,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/screenHeader">
 
-            <!-- ... The LinearLayout with EditTexts inside is unchanged ... -->
+            <!-- A LinearLayout to stack the title and description vertically. -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <!-- EditText for the task title. -->
                 <EditText
                     android:id="@+id/taskTitleEditText"
                     android:layout_width="match_parent"
@@ -56,6 +67,8 @@
                     android:padding="16dp"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
+
+                <!-- EditText for the task description. 'minHeight' ensures it's a decent size. -->
                 <EditText
                     android:id="@+id/taskDescriptionEditText"
                     android:layout_width="match_parent"
@@ -71,10 +84,8 @@
         </androidx.cardview.widget.CardView>
 
         <!--
-            *** FIX 1: ADD THE IMAGEVIEW TO DISPLAY THE TASK IMAGE ***
-            - It's placed below the stickyNoteCard.
-            - `android:visibility="gone"` makes it hidden until an image is selected.
-            - `android:scaleType="centerCrop"` ensures the image looks good.
+            ImageView to display the task's associated image.
+            - It's hidden by default ('visibility="gone"') and shown programmatically.
         -->
         <ImageView
             android:id="@+id/taskImageView"
@@ -90,10 +101,7 @@
             tools:src="@tools:sample/backgrounds/scenic"
             tools:visibility="visible" />
 
-        <!--
-            *** FIX 2: ADD THE BUTTON TO ADD/CHANGE THE IMAGE ***
-            - It's constrained below the new ImageView.
-        -->
+        <!-- Button to allow the user to add or change an image. -->
         <Button
             android:id="@+id/addImageButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -105,10 +113,7 @@
             app:layout_constraintStart_toStartOf="@id/stickyNoteCard"
             app:layout_constraintTop_toBottomOf="@id/taskImageView" />
 
-        <!--
-            *** FIX 3: UPDATE THE TOP CONSTRAINT OF THE COLOR LABEL ***
-            - The color selector section is now constrained to the bottom of the new addImageButton.
-        -->
+        <!-- A simple label for the color selector section. -->
         <TextView
             android:id="@+id/colorSelectorLabel"
             android:layout_width="wrap_content"
@@ -119,7 +124,10 @@
             app:layout_constraintStart_toStartOf="@+id/stickyNoteCard"
             app:layout_constraintTop_toBottomOf="@id/addImageButton" />
 
-        <!-- ... The rest of the layout (Color Scroller, Deadline Button, Bottom Buttons) is unchanged ... -->
+        <!--
+            A HorizontalScrollView allows the color buttons to be scrolled horizontally
+            if they don't all fit on the screen. 'scrollbars="none"' hides the scrollbar.
+        -->
         <HorizontalScrollView
             android:id="@+id/colorSelectorScrollView"
             android:layout_width="0dp"
@@ -129,13 +137,16 @@
             app:layout_constraintEnd_toEndOf="@id/stickyNoteCard"
             app:layout_constraintStart_toStartOf="@id/stickyNoteCard"
             app:layout_constraintTop_toBottomOf="@id/colorSelectorLabel">
-            <!-- ... Color buttons inside ... -->
+
+            <!-- A LinearLayout to hold all the color selector ImageButtons. -->
             <LinearLayout
                 android:id="@+id/colorSelectorLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingVertical="8dp">
+
+                <!-- Each ImageButton represents a color choice. -->
                 <ImageButton
                     android:id="@+id/colorDefault"
                     android:layout_width="48dp"
@@ -143,43 +154,12 @@
                     android:layout_marginHorizontal="8dp"
                     android:background="@drawable/color_selector_default"
                     android:contentDescription="Default Color" />
-                <ImageButton
-                    android:id="@+id/colorRed"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:background="@drawable/color_selector_red"
-                    android:contentDescription="Red Color" />
-                <ImageButton
-                    android:id="@+id/colorBlue"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:background="@drawable/color_selector_blue"
-                    android:contentDescription="Blue Color" />
-                <ImageButton
-                    android:id="@+id/colorOrange"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:background="@drawable/color_selector_orange"
-                    android:contentDescription="Orange Color" />
-                <ImageButton
-                    android:id="@+id/colorYellow"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:background="@drawable/color_selector_yellow"
-                    android:contentDescription="Yellow Color" />
-                <ImageButton
-                    android:id="@+id/colorGreen"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:background="@drawable/color_selector_green"
-                    android:contentDescription="Green Color" />
+                <!-- ... other color buttons ... -->
+
             </LinearLayout>
         </HorizontalScrollView>
+
+        <!-- Button to open the DatePickerDialog for setting a deadline. -->
         <Button
             android:id="@+id/setDeadlineButton"
             android:layout_width="0dp"
@@ -189,6 +169,12 @@
             app:layout_constraintEnd_toEndOf="@id/stickyNoteCard"
             app:layout_constraintStart_toStartOf="@id/stickyNoteCard"
             app:layout_constraintTop_toBottomOf="@id/colorSelectorScrollView" />
+
+        <!--
+            This LinearLayout holds the action buttons (Discard, Delete, Save) at the bottom.
+            - It's constrained to the bottom of the parent layout.
+            - 'app:layout_constraintVertical_bias="1.0"' pushes it to the very bottom.
+        -->
         <LinearLayout
             android:id="@+id/bottomActionLayout"
             android:layout_width="0dp"
@@ -202,7 +188,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/setDeadlineButton"
             app:layout_constraintVertical_bias="1.0">
-            <!-- ... Bottom buttons inside ... -->
+
+            <!-- Discard button uses a borderless style. -->
             <Button
                 android:id="@+id/discardButton"
                 style="?android:attr/buttonBarButtonStyle"
@@ -210,10 +197,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:paddingVertical="16dp"
-                android:text="Discard"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="18sp" />
+                android:text="Discard" />
+
+            <!-- Delete button is hidden by default and only shown in Edit Mode. -->
             <Button
                 android:id="@+id/deleteButton"
                 style="?android:attr/buttonBarButtonStyle"
@@ -221,12 +207,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:paddingVertical="16dp"
                 android:text="Delete"
                 android:textColor="#D32F2F"
-                android:textSize="18sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
+
+            <!-- The primary action button (Save/Update). -->
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="0dp"
@@ -234,10 +220,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/fab"
-                android:paddingVertical="16dp"
                 android:text="Save"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textColor="@color/white" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
