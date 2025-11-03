@@ -3,15 +3,18 @@ package com.example.hitlist
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class TaskAdapter(
     private var tasks: MutableList<Task>,
@@ -35,6 +38,8 @@ class TaskAdapter(
         val deleteButton: ImageButton = itemView.findViewById(R.id.deleteButton)
         val taskCard: CardView = itemView.findViewById(R.id.taskCard)
         val titleBar: LinearLayout = itemView.findViewById(R.id.titleBar)
+        // --- FIX 1: Add a reference to the new ImageView from the layout ---
+        val taskImagePreview: ImageView = itemView.findViewById(R.id.taskImagePreview)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -64,6 +69,19 @@ class TaskAdapter(
             holder.titleBar.setBackgroundColor(Color.parseColor("#F0F0F0"))
         }
 
+        // --- FIX 2: Add logic to show or hide the image preview ---
+        if (task.imageUri != null) {
+            // If the task has an image URI, make the preview visible
+            holder.taskImagePreview.visibility = View.VISIBLE
+            // Use Glide to load the image from the URI into the ImageView
+            Glide.with(holder.itemView.context)
+                .load(Uri.parse(task.imageUri))
+                .into(holder.taskImagePreview)
+        } else {
+            // If there's no image URI, make sure the preview is hidden
+            holder.taskImagePreview.visibility = View.GONE
+        }
+
         holder.deleteButton.setOnClickListener {
             val taskToDelete = tasks[position]
             dbHelper.deleteTask(taskToDelete.id)
@@ -72,7 +90,6 @@ class TaskAdapter(
             notifyItemRangeChanged(position, tasks.size)
         }
 
-        // ADDED: Click listener for the entire item
         holder.itemView.setOnClickListener { view ->
             val intent = Intent(view.context, TaskDetailActivity::class.java)
             intent.putExtra("EXTRA_TASK", task)
