@@ -3,20 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:allowBackup="true"        android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HITLIST">
-        <activity
-            android:name=".NewTask"
-            android:exported="false" />
+
+        <!-- This is your main task list screen. -->
         <activity
             android:name=".Homepage"
             android:exported="false" />
+
+        <!-- This is your initial splash screen. It's the entry point of the app. -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -26,6 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--
+            *** FIX APPLIED HERE ***
+            This line registers your new TaskDetailActivity with the Android system.
+            Without it, the app will crash whenever you try to open this screen.
+        -->
+        <activity
+            android:name=".TaskDetailActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    The root element is a ScrollView to ensure that all content is accessible even on small screens.
--->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,19 +7,11 @@
     android:fillViewport="true"
     android:background="#F5F5F5">
 
-    <!--
-        A ConstraintLayout is used inside the ScrollView to arrange all the elements.
-    -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".NewTask">
+        tools:context=".TaskDetailActivity"> <!-- Context updated to TaskDetailActivity -->
 
-        <!--
-            REMOVED: The back button ImageButton from the top has been removed.
-        -->
-
-        <!-- Header TextView to give context to the user. -->
         <TextView
             android:id="@+id/screenHeader"
             android:layout_width="wrap_content"
@@ -37,7 +26,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- The "sticky note" CardView for the task details. -->
         <androidx.cardview.widget.CardView
             android:id="@+id/stickyNoteCard"
             android:layout_width="0dp"
@@ -82,7 +70,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Label for the color selection section. -->
         <TextView
             android:id="@+id/colorSelectorLabel"
             android:layout_width="wrap_content"
@@ -93,7 +80,6 @@
             app:layout_constraintStart_toStartOf="@+id/stickyNoteCard"
             app:layout_constraintTop_toBottomOf="@id/stickyNoteCard" />
 
-        <!-- HorizontalScrollView for the color pickers. -->
         <HorizontalScrollView
             android:id="@+id/colorSelectorScrollView"
             android:layout_width="0dp"
@@ -111,7 +97,6 @@
                 android:orientation="horizontal"
                 android:paddingVertical="8dp">
 
-                <!-- All the color ImageButtons go here... -->
                 <ImageButton
                     android:id="@+id/colorDefault"
                     android:layout_width="48dp"
@@ -157,10 +142,6 @@
             </LinearLayout>
         </HorizontalScrollView>
 
-        <!--
-            NEW: A single button to open the calendar dialog for setting a deadline.
-            The text on this button will be updated programmatically to show the selected date.
-        -->
         <Button
             android:id="@+id/setDeadlineButton"
             android:layout_width="0dp"
@@ -171,15 +152,6 @@
             app:layout_constraintStart_toStartOf="@id/stickyNoteCard"
             app:layout_constraintTop_toBottomOf="@id/colorSelectorScrollView" />
 
-        <!--
-            REMOVED: The inline DatePicker has been removed from the layout.
-        -->
-
-        <!--
-            NEW: A horizontal LinearLayout to group the action buttons at the bottom.
-            This ensures they stay together and are easy to manage.
-            - 'app:layout_constraintBottom_toBottomOf="parent"' anchors this group to the bottom.
-        -->
         <LinearLayout
             android:id="@+id/bottomActionLayout"
             android:layout_width="0dp"
@@ -193,42 +165,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/setDeadlineButton"
             app:layout_constraintVertical_bias="1.0">
-            <!-- 'bias=1.0' pushes it to the bottom -->
 
-            <!--
-                NEW: The "Cancel" button, now styled in red.
-                - 'layout_weight="1"' makes it take up half of the available space.
-                - A red color is used for the 'backgroundTint' to signify a "destructive" or "exit" action.
-            -->
             <Button
-                android:id="@+id/cancelButton"
+                android:id="@+id/discardButton"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:backgroundTint="#D32F2F"
+                android:layout_weight="1"
                 android:paddingVertical="16dp"
-                android:text="Cancel"
-                android:textColor="@color/white"
+                android:text="Discard"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="18sp" />
 
-            <!--
-                The "Save Task" button, part of the bottom action group.
-                - 'layout_weight="1"' makes it take up the other half of the space.
-            -->
             <Button
-                android:id="@+id/saveTaskButton"
+                android:id="@+id/deleteButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:paddingVertical="16dp"
+                android:text="Delete"
+                android:textColor="#D32F2F"
+                android:textSize="18sp"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <Button
+                android:id="@+id/saveButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/fab"
                 android:paddingVertical="16dp"
-                android:text="Save Task"
+                android:text="Save"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

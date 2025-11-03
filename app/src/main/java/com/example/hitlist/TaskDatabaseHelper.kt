@@ -98,4 +98,16 @@ class TaskDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_
         db.delete(TABLE_NAME, "$COLUMN_ID = ?", arrayOf(taskId.toString()))
         db.close()
     }
+    fun updateTask(task: Task): Int {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_TITLE, task.title)
+            put(COLUMN_DESCRIPTION, task.description)
+            put(COLUMN_COLOR, task.color)
+            put(COLUMN_DEADLINE, task.deadline)
+        }
+        val result = db.update(TABLE_NAME, values, "$COLUMN_ID = ?", arrayOf(task.id.toString()))
+        db.close()
+        return result
+    }
 }
