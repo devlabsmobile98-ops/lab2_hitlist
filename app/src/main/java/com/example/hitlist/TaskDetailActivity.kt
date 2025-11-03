@@ -3,23 +3,27 @@ package com.example.hitlist
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.bumptech.glide.Glide
 import java.io.Serializable
 import java.util.Calendar
 
 class TaskDetailActivity : AppCompatActivity() {
 
-    // UI Views
+    // --- UI Views ---
     private lateinit var titleEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var saveButton: Button
@@ -27,22 +31,34 @@ class TaskDetailActivity : AppCompatActivity() {
     private lateinit var deleteButton: Button
     private lateinit var setDeadlineButton: Button
     private lateinit var stickyNoteCard: CardView
+    // --- NEW: UI for Image ---
+    private lateinit var addImageButton: Button
+    private lateinit var taskImageView: ImageView
 
-    // Data and State
+    // --- Data and State ---
     private lateinit var dbHelper: TaskDatabaseHelper
     private var existingTask: Task? = null
     private var isEditMode = false
     private var selectedColor: String = "#FFFFFF"
     private var selectedDeadline: String? = null
+    // --- NEW: State for Image URI ---
+    private var selectedImageUri: String? = null
 
-    // Map to get the dark color for the sticky note's title bar
+    // --- NEW: ActivityResultLauncher to handle picking an image from the gallery ---
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            // Take persistent permissions to access the image URI across device reboots
+            contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            // Store the URI as a string and update the UI
+            selectedImageUri = it.toString()
+            updateImageView()
+        }
+    }
+
+    // Color map
     private val colorMap = mapOf(
-        "#FFFFFF" to "#F0F0F0",
-        "#FFCDD2" to "#E57373",
-        "#BBDEFB" to "#64B5F6",
-        "#FFCCBC" to "#FF8A65",
-        "#FFF9C4" to "#FFF176",
-        "#C8E6C9" to "#81C784"
+        "#FFFFFF" to "#F0F0F0", "#FFCDD2" to "#E57373", "#BBDEFB" to "#64B5F6",
+        "#FFCCBC" to "#FF8A65", "#FFF9C4" to "#FFF176", "#C8E6C9" to "#81C784"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,14 +75,16 @@ class TaskDetailActivity : AppCompatActivity() {
         deleteButton = findViewById(R.id.deleteButton)
         setDeadlineButton = findViewById(R.id.setDeadlineButton)
         stickyNoteCard = findViewById(R.id.stickyNoteCard)
+        // --- NEW: Initialize Image UI ---
+        addImageButton = findViewById(R.id.addImageButton)
+        taskImageView = findViewById(R.id.taskImageView)
 
-        // Determine if we are creating or editing a task
+        // Determine if we are creating or editing
         if (intent.hasExtra("EXTRA_TASK")) {
             isEditMode = true
             existingTask = getSerializable(intent, "EXTRA_TASK", Task::class.java)
         }
 
-        // Configure the screen based on the mode
         if (isEditMode) {
             setupEditMode()
         } else {
@@ -74,31 +92,22 @@ class TaskDetailActivity : AppCompatActivity() {
         }
 
         setupClickListeners()
-
-        // --- NEW: Add back press handling ---
         setupBackPressHandling()
     }
 
-    // --- NEW: Method to handle the system back button and show a confirmation dialog ---
     private fun setupBackPressHandling() {
         val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                showExitConfirmationDialog()
-            }
+            override fun handleOnBackPressed() { showExitConfirmationDialog() }
         }
         onBackPressedDispatcher.addCallback(this, callback)
     }
 
-    // --- NEW: Confirmation dialog logic ---
     private fun showExitConfirmationDialog() {
-        val message = if (isEditMode) "Are you sure you want to discard your changes?" else "Are you sure you want to discard this new task?"
+        val message = if (isEditMode) "Discard your changes?" else "Discard this new task?"
         AlertDialog.Builder(this)
-            .setTitle("Discard Changes?")
+            .setTitle("Discard")
             .setMessage(message)
-            .setPositiveButton("Discard") { _, _ ->
-                // To safely finish the activity, we call the original back press behavior
-                finish()
-            }
+            .setPositiveButton("Discard") { _, _ -> finish() }
             .setNegativeButton("Keep Editing", null)
             .show()
     }
@@ -106,7 +115,6 @@ class TaskDetailActivity : AppCompatActivity() {
     private fun setupEditMode() {
         findViewById<TextView>(R.id.screenHeader).text = "Edit Your Task"
         saveButton.text = "Update"
-        discardButton.text = "Cancel" // "Cancel" can make more sense than "Discard" when editing
         deleteButton.visibility = View.VISIBLE
 
         existingTask?.let { task ->
@@ -114,8 +122,12 @@ class TaskDetailActivity : AppCompatActivity() {
             descriptionEditText.setText(task.description)
             selectedColor = task.color ?: "#FFFFFF"
             selectedDeadline = task.deadline
+            // --- NEW: Load existing image URI ---
+            selectedImageUri = task.imageUri
             updateDeadlineDisplay()
             updateNoteColors()
+            // --- NEW: Update the image view ---
+            updateImageView()
         }
     }
 
@@ -128,11 +140,13 @@ class TaskDetailActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         saveButton.setOnClickListener { saveOrUpdateTask() }
-        // The discard button should show the same confirmation as the back button
         discardButton.setOnClickListener { showExitConfirmationDialog() }
         deleteButton.setOnClickListener { deleteTask() }
         setDeadlineButton.setOnClickListener { showDatePickerDialog() }
+        // --- NEW: Click listener for adding an image ---
+        addImageButton.setOnClickListener { pickImageLauncher.launch("image/*") }
 
+        // Color pickers
         findViewById<View>(R.id.colorDefault).setOnClickListener { onColorSelected("#FFFFFF") }
         findViewById<View>(R.id.colorRed).setOnClickListener { onColorSelected("#FFCDD2") }
         findViewById<View>(R.id.colorBlue).setOnClickListener { onColorSelected("#BBDEFB") }
@@ -149,9 +163,8 @@ class TaskDetailActivity : AppCompatActivity() {
     private fun updateNoteColors() {
         val lightColor = Color.parseColor(selectedColor)
         val darkColorString = colorMap[selectedColor] ?: selectedColor
-        val darkColor = Color.parseColor(darkColorString)
+        titleEditText.setBackgroundColor(Color.parseColor(darkColorString))
         stickyNoteCard.setCardBackgroundColor(lightColor)
-        titleEditText.setBackgroundColor(darkColor)
     }
 
     private fun saveOrUpdateTask() {
@@ -167,11 +180,14 @@ class TaskDetailActivity : AppCompatActivity() {
                 title = taskTitle,
                 description = taskDescription,
                 color = selectedColor,
-                deadline = selectedDeadline
+                deadline = selectedDeadline,
+                // --- NEW: Include image URI in update ---
+                imageUri = selectedImageUri
             )
             dbHelper.updateTask(updatedTask)
         } else {
-            dbHelper.addTask(taskTitle, taskDescription, selectedColor, selectedDeadline)
+            // --- NEW: Include image URI when adding ---
+            dbHelper.addTask(taskTitle, taskDescription, selectedColor, selectedDeadline, selectedImageUri)
         }
 
         setResult(RESULT_OK)
@@ -191,15 +207,25 @@ class TaskDetailActivity : AppCompatActivity() {
         DatePickerDialog(this, { _, year, month, day ->
             selectedDeadline = "$day/${month + 1}/$year"
             updateDeadlineDisplay()
-        },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
     }
 
     private fun updateDeadlineDisplay() {
         setDeadlineButton.text = if (selectedDeadline != null) "Deadline: $selectedDeadline" else "Set Deadline"
+    }
+
+    // --- NEW: Method to show or hide the ImageView and load the image with Glide ---
+    private fun updateImageView() {
+        if (selectedImageUri != null) {
+            taskImageView.visibility = View.VISIBLE
+            addImageButton.text = "Change Image" // Update button text for better UX
+            Glide.with(this)
+                .load(Uri.parse(selectedImageUri))
+                .into(taskImageView)
+        } else {
+            taskImageView.visibility = View.GONE
+            addImageButton.text = "Add Image"
+        }
     }
 
     private fun <T : Serializable?> getSerializable(intent: Intent, key: String, clazz: Class<T>): T? {

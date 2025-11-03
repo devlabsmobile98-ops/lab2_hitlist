@@ -27,5 +27,6 @@ data class Task(
     val title: String,
     val description: String,
     val color: String?, // The '?' makes this property nullable, meaning it can hold a null value if no color is set.
-    val deadline: String? // This is also nullable in case a task is created without a deadline.
+    val deadline: String?, // This is also nullable in case a task is created without a deadline.
+    val imageUri: String? // to hold the image data
 ) : java.io.Serializable // This allows us to pass Task objects between activities

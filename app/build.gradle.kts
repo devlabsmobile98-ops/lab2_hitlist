@@ -45,11 +45,14 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.cardview:cardview:1.0.0")
-    // Material 3 via version catalog (make sure libs.versions.toml has material = "1.12.0")
+    // Material 3 via version catalog
     implementation(libs.material)
 
     // (Your gif lib)
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.17")
+
+    // --- FIX APPLIED HERE: Use the version catalog reference for Glide ---
+    implementation(libs.glide)
 
     // Test
     testImplementation(libs.junit)
