@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is required for the FileProvider declared in AndroidManifest.xml. It defines
+the specific paths that your app is allowed to share with other apps (like the camera app).
+Exposing specific directories like this is a modern security requirement in Android.
+-->
+<paths>
+    <!--
+    This 'files-path' entry corresponds to the directory returned by `context.getFilesDir()`.
+    - name="my_images": A logical, internal name for this shareable path.
+    - path="images/": Specifies that we can share files within the 'images' subdirectory of our
+                      app's private files directory. This must match the path used in TaskDetailActivity.
+    -->
+    <files-path
+        name="my_images"
+        path="images/" />
+</paths>

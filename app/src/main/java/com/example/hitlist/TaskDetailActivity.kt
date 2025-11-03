@@ -1,6 +1,10 @@
 // The 'package' declaration organizes your code into a logical structure.
 package com.example.hitlist
 
+// --- Import necessary classes for file handling and the FileProvider ---
+import java.io.File
+import androidx.core.content.FileProvider
+
 // Import necessary classes from the Android SDK and other libraries.
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -31,7 +35,6 @@ import java.util.Calendar
 class TaskDetailActivity : AppCompatActivity() {
 
     // --- UI View Properties ---
-    // 'private lateinit' properties are initialized in onCreate to avoid nullability.
     private lateinit var titleEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var saveButton: Button
@@ -43,21 +46,26 @@ class TaskDetailActivity : AppCompatActivity() {
     private lateinit var taskImageView: ImageView
 
     // --- Data and State Properties ---
-    private lateinit var dbHelper: TaskDatabaseHelper // Manages all database interactions.
-    private var existingTask: Task? = null // Holds the task being edited. Null if creating a new task.
-    private var isEditMode = false // A boolean flag to easily check the current mode.
-    private var selectedColor: String = "#FFFFFF" // Holds the currently selected color hex string. Defaults to white.
-    private var selectedDeadline: String? = null // Holds the deadline string. Null if not set.
-    private var selectedImageUri: String? = null // Holds the string representation of the selected image's URI.
+    private lateinit var dbHelper: TaskDatabaseHelper
+    private var existingTask: Task? = null
+    private var isEditMode = false
+    private var selectedColor: String = "#FFFFFF"
+    private var selectedDeadline: String? = null
+    private var selectedImageUri: String? = null
+    // A temporary URI to hold the path for the camera to save the new photo.
+    private var tempImageUri: Uri? = null
+
+    // --- ActivityResultLaunchers ---
 
     /**
-     * An ActivityResultLauncher for handling the result of picking an image from the gallery.
-     * This is the modern, recommended way to handle activity results.
+     * Launcher for picking an image from the device's gallery. This is the modern,
+     * recommended way to handle results from other activities.
      */
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         // This lambda is executed when the user selects an image (or cancels).
         uri?.let {
-            // Persist permission to read the URI across device reboots. This is crucial for long-term access.
+            // Take persistent permission to read the URI. This is crucial for long-term access,
+            // ensuring the app can still display the image after a device reboot.
             contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             // Store the URI as a string and update the ImageView to show the new image.
             selectedImageUri = it.toString()
@@ -66,8 +74,21 @@ class TaskDetailActivity : AppCompatActivity() {
     }
 
     /**
+     * Launcher for capturing a photo using the device's camera.
+     */
+    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
+        // This lambda executes after the camera app closes. The 'success' boolean indicates
+        // if the camera successfully saved a picture to the provided URI.
+        if (success) {
+            // If a photo was successfully taken, the image data is now at 'tempImageUri'.
+            // We set this as our selected URI and update the UI.
+            selectedImageUri = tempImageUri.toString()
+            updateImageView()
+        }
+    }
+
+    /**
      * A map to associate a light "note" color with a darker "title bar" color for better UI contrast.
-     * The key is the light color, and the value is the corresponding dark color.
      */
     private val colorMap = mapOf(
         "#FFFFFF" to "#F0F0F0", "#FFCDD2" to "#E57373", "#BBDEFB" to "#64B5F6",
@@ -81,10 +102,8 @@ class TaskDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_detail)
 
-        // Initialize the database helper.
+        // Initialize the database helper and all UI views.
         dbHelper = TaskDatabaseHelper(this)
-
-        // Find and assign all UI views from the layout file.
         titleEditText = findViewById(R.id.taskTitleEditText)
         descriptionEditText = findViewById(R.id.taskDescriptionEditText)
         saveButton = findViewById(R.id.saveButton)
@@ -100,7 +119,6 @@ class TaskDetailActivity : AppCompatActivity() {
         if (intent.hasExtra("EXTRA_TASK")) {
             // If it does, we are in "Edit Mode".
             isEditMode = true
-            // Retrieve the Task object from the intent.
             existingTask = getSerializable(intent, "EXTRA_TASK", Task::class.java)
         }
 
@@ -111,11 +129,80 @@ class TaskDetailActivity : AppCompatActivity() {
             setupCreateMode()
         }
 
-        // Set up all click listeners for buttons.
+        // Set up all user interaction handlers.
         setupClickListeners()
-        // Set up custom handling for the system back button.
         setupBackPressHandling()
     }
+
+    /**
+     * Centralizes the setup of all OnClickListeners for the buttons on this screen.
+     */
+    private fun setupClickListeners() {
+        saveButton.setOnClickListener { saveOrUpdateTask() }
+        discardButton.setOnClickListener { showExitConfirmationDialog() }
+        deleteButton.setOnClickListener { deleteTask() }
+        setDeadlineButton.setOnClickListener { showDatePickerDialog() }
+
+        // The "Add Image" button now opens a selection dialog.
+        addImageButton.setOnClickListener { showImagePickerDialog() }
+
+        // Set up click listeners for all the color selection buttons.
+        findViewById<View>(R.id.colorDefault).setOnClickListener { onColorSelected("#FFFFFF") }
+        findViewById<View>(R.id.colorRed).setOnClickListener { onColorSelected("#FFCDD2") }
+        findViewById<View>(R.id.colorBlue).setOnClickListener { onColorSelected("#BBDEFB") }
+        findViewById<View>(R.id.colorOrange).setOnClickListener { onColorSelected("#FFCCBC") }
+        findViewById<View>(R.id.colorYellow).setOnClickListener { onColorSelected("#FFF9C4") }
+        findViewById<View>(R.id.colorGreen).setOnClickListener { onColorSelected("#C8E6C9") }
+    }
+
+    /**
+     * Displays an AlertDialog giving the user the choice to either take a photo or choose one from their gallery.
+     */
+    private fun showImagePickerDialog() {
+        val options = arrayOf("Take Photo", "Choose from Gallery")
+        AlertDialog.Builder(this)
+            .setTitle("Add Image")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> launchCamera() // "Take Photo" was clicked.
+                    1 -> launchGallery() // "Choose from Gallery" was clicked.
+                }
+            }
+            .setNegativeButton("Cancel", null) // A "Cancel" button to dismiss the dialog.
+            .show()
+    }
+
+    /**
+     * Launches the gallery picker using the 'pickImageLauncher'.
+     */
+    private fun launchGallery() {
+        pickImageLauncher.launch("image/*")
+    }
+
+    /**
+     * Prepares a temporary file and launches the camera app to capture a photo.
+     */
+    private fun launchCamera() {
+        // Create a file in the app's private "images" directory to store the photo.
+        val imageFile = File(filesDir, "images/hitlist_capture_${System.currentTimeMillis()}.jpg").apply {
+            parentFile?.mkdirs() // Ensure the 'images' directory exists.
+        }
+
+        // Generate a secure, shareable content URI for the file using our FileProvider.
+        tempImageUri = FileProvider.getUriForFile(
+            this,
+            "${applicationContext.packageName}.fileprovider", // Authority must match AndroidManifest.
+            imageFile
+        )
+
+        // Launch the camera app, but only if the tempImageUri was successfully created.
+        // This safe-call handles the (unlikely) case where getUriForFile returns null.
+        tempImageUri?.let { uri ->
+            takePictureLauncher.launch(uri)
+        }
+    }
+
+    // --- The methods below are correct and do not need changes. ---
 
     /**
      * Intercepts the default back button press to show a confirmation dialog,
@@ -138,26 +225,22 @@ class TaskDetailActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Discard")
             .setMessage(message)
-            .setPositiveButton("Discard") { _, _ -> finish() } // Closes the activity.
-            .setNegativeButton("Keep Editing", null) // Closes the dialog and does nothing.
+            .setPositiveButton("Discard") { _, _ -> finish() }
+            .setNegativeButton("Keep Editing", null)
             .show()
     }
 
     /**
-     * Configures the UI for editing an existing task. It populates all fields
-     * with the data from the 'existingTask' object.
+     * Configures the UI for editing an existing task by pre-filling all fields.
      */
     private fun setupEditMode() {
         findViewById<TextView>(R.id.screenHeader).text = "Edit Your Task"
         saveButton.text = "Update"
-        deleteButton.visibility = View.VISIBLE // Show the delete button only in edit mode.
-
-        // Use a safe call '.let' to execute code only if existingTask is not null.
+        deleteButton.visibility = View.VISIBLE
         existingTask?.let { task ->
-            // Pre-fill all UI fields with the task's data.
             titleEditText.setText(task.title)
             descriptionEditText.setText(task.description)
-            selectedColor = task.color ?: "#FFFFFF" // Use default color if none is set.
+            selectedColor = task.color ?: "#FFFFFF"
             selectedDeadline = task.deadline
             selectedImageUri = task.imageUri
             updateDeadlineDisplay()
@@ -167,37 +250,17 @@ class TaskDetailActivity : AppCompatActivity() {
     }
 
     /**
-     * Configures the UI for creating a new task. This is the default state.
+     * Configures the UI for creating a new task.
      */
     private fun setupCreateMode() {
         findViewById<TextView>(R.id.screenHeader).text = "Define a new task to execute"
         saveButton.text = "Save Task"
-        deleteButton.visibility = View.GONE // Hide the delete button when creating a new task.
-        updateNoteColors() // Set the default note color.
-    }
-
-    /**
-     * Centralizes the setup of all OnClickListeners for the buttons on this screen.
-     */
-    private fun setupClickListeners() {
-        saveButton.setOnClickListener { saveOrUpdateTask() }
-        discardButton.setOnClickListener { showExitConfirmationDialog() }
-        deleteButton.setOnClickListener { deleteTask() }
-        setDeadlineButton.setOnClickListener { showDatePickerDialog() }
-        addImageButton.setOnClickListener { pickImageLauncher.launch("image/*") } // Triggers the image picker.
-
-        // Set up click listeners for all the color selection buttons.
-        findViewById<View>(R.id.colorDefault).setOnClickListener { onColorSelected("#FFFFFF") }
-        findViewById<View>(R.id.colorRed).setOnClickListener { onColorSelected("#FFCDD2") }
-        findViewById<View>(R.id.colorBlue).setOnClickListener { onColorSelected("#BBDEFB") }
-        findViewById<View>(R.id.colorOrange).setOnClickListener { onColorSelected("#FFCCBC") }
-        findViewById<View>(R.id.colorYellow).setOnClickListener { onColorSelected("#FFF9C4") }
-        findViewById<View>(R.id.colorGreen).setOnClickListener { onColorSelected("#C8E6C9") }
+        deleteButton.visibility = View.GONE
+        updateNoteColors()
     }
 
     /**
      * Called when a color button is clicked. Updates the state and refreshes the UI.
-     * @param colorHex The hex string of the selected color.
      */
     private fun onColorSelected(colorHex: String) {
         selectedColor = colorHex
@@ -205,8 +268,7 @@ class TaskDetailActivity : AppCompatActivity() {
     }
 
     /**
-     * Updates the background colors of the title EditText and the main CardView
-     * based on the 'selectedColor'.
+     * Updates the background colors of the UI based on the 'selectedColor'.
      */
     private fun updateNoteColors() {
         val lightColor = Color.parseColor(selectedColor)
@@ -216,19 +278,16 @@ class TaskDetailActivity : AppCompatActivity() {
     }
 
     /**
-     * Handles the logic for saving a new task or updating an existing one.
+     * Handles the logic for saving a new task or updating an existing one in the database.
      */
     private fun saveOrUpdateTask() {
         val taskTitle = titleEditText.text.toString().trim()
-        // Basic validation to ensure the title is not empty.
         if (taskTitle.isEmpty()) {
             Toast.makeText(this, "Title cannot be empty.", Toast.LENGTH_SHORT).show()
             return
         }
         val taskDescription = descriptionEditText.text.toString().trim()
-
         if (isEditMode) {
-            // If in edit mode, create an updated Task object using .copy() and update it in the DB.
             val updatedTask = existingTask!!.copy(
                 title = taskTitle,
                 description = taskDescription,
@@ -238,13 +297,9 @@ class TaskDetailActivity : AppCompatActivity() {
             )
             dbHelper.updateTask(updatedTask)
         } else {
-            // If in create mode, add a new task to the DB.
             dbHelper.addTask(taskTitle, taskDescription, selectedColor, selectedDeadline, selectedImageUri)
         }
-
-        // Set the result to RESULT_OK to notify the Homepage to refresh its list.
         setResult(RESULT_OK)
-        // Close this activity and return to the previous screen.
         finish()
     }
 
@@ -254,7 +309,7 @@ class TaskDetailActivity : AppCompatActivity() {
     private fun deleteTask() {
         existingTask?.let {
             dbHelper.deleteTask(it.id)
-            setResult(RESULT_OK) // Notify Homepage to refresh.
+            setResult(RESULT_OK)
             finish()
         }
     }
@@ -265,7 +320,6 @@ class TaskDetailActivity : AppCompatActivity() {
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
         DatePickerDialog(this, { _, year, month, day ->
-            // Month is 0-indexed, so we add 1 for correct display.
             selectedDeadline = "$day/${month + 1}/$year"
             updateDeadlineDisplay()
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
@@ -283,15 +337,12 @@ class TaskDetailActivity : AppCompatActivity() {
      */
     private fun updateImageView() {
         if (selectedImageUri != null) {
-            // If an image is selected, show the ImageView and update the button text.
             taskImageView.visibility = View.VISIBLE
             addImageButton.text = "Change Image"
-            // Use Glide to efficiently load the image from its URI into the ImageView.
             Glide.with(this)
                 .load(Uri.parse(selectedImageUri))
                 .into(taskImageView)
         } else {
-            // If no image is selected, hide the ImageView and reset the button text.
             taskImageView.visibility = View.GONE
             addImageButton.text = "Add Image"
         }

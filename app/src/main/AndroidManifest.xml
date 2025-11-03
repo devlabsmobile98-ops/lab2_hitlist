@@ -8,6 +8,15 @@ It declares the app's components, required permissions, hardware/software featur
     xmlns:tools="http://schemas.android.com/tools">
 
     <!--
+    This declaration informs the Google Play Store and the Android system that the app uses
+    the camera. 'android:required="false"' is crucial; it means the camera is an optional
+    feature, and the app can still be installed on devices without a camera (e.g., some tablets).
+    -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!--
     The <application> tag contains all the application-level components and properties.
     -->
     <application
@@ -22,9 +31,7 @@ It declares the app's components, required permissions, hardware/software featur
 
         <!--
         Declaration for the Homepage activity. This is your main task list screen.
-        'android:name=".Homepage"' specifies the class for this activity.
-        'android:exported="false"' means this activity cannot be launched by other apps,
-        which is a good security practice for internal screens.
+        'android:exported="false"' is a security best practice, preventing other apps from launching it directly.
         -->
         <activity
             android:name=".Homepage"
@@ -32,8 +39,7 @@ It declares the app's components, required permissions, hardware/software featur
 
         <!--
         Declaration for the MainActivity. This is your initial splash/entry screen.
-        'android:exported="true"' is required because it contains the LAUNCHER intent-filter,
-        making it discoverable and launchable by the user from the home screen.
+        'android:exported="true"' is required because it contains the LAUNCHER intent-filter.
         -->
         <activity
             android:name=".MainActivity"
@@ -42,7 +48,6 @@ It declares the app's components, required permissions, hardware/software featur
             The <intent-filter> tells the system what kinds of intents this activity can handle.
             ACTION_MAIN: This is the main entry point of the application.
             CATEGORY_LAUNCHER: This makes the activity appear in the top-level app launcher.
-            Together, these two lines define the starting point of your app.
             -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,15 +57,31 @@ It declares the app's components, required permissions, hardware/software featur
 
         <!--
         Declaration for the TaskDetailActivity. This is the screen for creating and editing tasks.
-        By registering it here, you make the Android system aware of its existence, allowing
-        it to be launched via an Intent from other activities like Homepage.
-        'android:exported="false"' is used because this screen is only intended to be opened
-        from within your own app.
+        By registering it here, you make the Android system aware of its existence.
         -->
         <activity
             android:name=".TaskDetailActivity"
             android:exported="false" />
 
+        <!--
+        This provider declaration is essential for securely sharing files (like camera photos)
+        with other applications. It prevents FileUriExposedException on modern Android versions.
+        - 'android:name': Points to the standard FileProvider class from the AndroidX library.
+        - 'android:authorities': A unique name for your provider. Using "${applicationId}.fileprovider"
+                                 is the recommended practice to ensure it's always unique.
+        - 'android:exported="false"': Prevents other apps from accessing the provider directly.
+        - 'android:grantUriPermissions="true"': Allows the provider to grant temporary access to files.
+        -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <!-- This meta-data points to the XML file where you defined your shareable paths. -->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

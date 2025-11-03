@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    The root is a ScrollView to ensure all content is accessible on smaller screens,
-    as the form can be quite long.
-    - 'fillViewport="true"' allows the child ConstraintLayout to fill the screen height.
+    The root element is a ScrollView. This is essential for a form layout like this,
+    as it ensures that all form fields are accessible on devices with smaller screens
+    by allowing the user to scroll vertically.
+    - 'android:fillViewport="true"' is an important attribute that allows the child
+      ConstraintLayout to grow and fill the entire height of the ScrollView if the
+      content is shorter than the screen. This is useful for keeping the bottom
+      buttons anchored correctly.
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,13 +16,19 @@
     android:background="#F5F5F5"
     android:fillViewport="true">
 
-    <!-- A ConstraintLayout is used inside the ScrollView for flexible positioning of all form elements. -->
+    <!--
+        A ConstraintLayout is used inside the ScrollView to provide a powerful and flexible
+        way to position all the form elements relative to each other and to the parent.
+        - 'android:layout_height="wrap_content"' ensures that the layout is only as tall
+          as its content, which is necessary for the ScrollView to function correctly.
+    -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".TaskDetailActivity">
 
-        <!-- The main header text for the screen ("Define a new task" or "Edit Your Task"). -->
+        <!-- The main header TextView for the screen. Its text will be set programmatically
+             to either "Define a new task" or "Edit Your Task". -->
         <TextView
             android:id="@+id/screenHeader"
             android:layout_width="wrap_content"
@@ -34,7 +44,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <!--
-            This CardView creates the "sticky note" visual for the title and description.
+            This CardView creates the "sticky note" visual effect for the task's title
+            and description fields. It provides rounded corners and a shadow.
         -->
         <androidx.cardview.widget.CardView
             android:id="@+id/stickyNoteCard"
@@ -49,13 +60,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/screenHeader">
 
-            <!-- A LinearLayout to stack the title and description vertically. -->
+            <!-- A vertical LinearLayout is used inside the card to simply stack the
+                 title and description EditTexts on top of each other. -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- EditText for the task title. -->
+                <!-- EditText for the task title. It has a distinct background to look
+                     like the header of a sticky note. -->
                 <EditText
                     android:id="@+id/taskTitleEditText"
                     android:layout_width="match_parent"
@@ -68,7 +81,8 @@
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
-                <!-- EditText for the task description. 'minHeight' ensures it's a decent size. -->
+                <!-- EditText for the task description. 'minHeight' ensures it has an
+                     appropriately large touch area, even when empty. -->
                 <EditText
                     android:id="@+id/taskDescriptionEditText"
                     android:layout_width="match_parent"
@@ -85,7 +99,10 @@
 
         <!--
             ImageView to display the task's associated image.
-            - It's hidden by default ('visibility="gone"') and shown programmatically.
+            - 'android:visibility="gone"' makes it hidden by default. It will be made
+              visible programmatically in TaskDetailActivity if an image is selected.
+            - 'tools:visibility="visible"' is a design-time attribute that makes the view
+              visible in the Android Studio previewer, which greatly helps with designing the layout.
         -->
         <ImageView
             android:id="@+id/taskImageView"
@@ -101,7 +118,8 @@
             tools:src="@tools:sample/backgrounds/scenic"
             tools:visibility="visible" />
 
-        <!-- Button to allow the user to add or change an image. -->
+        <!-- This Button allows the user to trigger the image selection process (camera or gallery).
+             It uses an "OutlinedButton" style for a less prominent look than the main save button. -->
         <Button
             android:id="@+id/addImageButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -113,7 +131,7 @@
             app:layout_constraintStart_toStartOf="@id/stickyNoteCard"
             app:layout_constraintTop_toBottomOf="@id/taskImageView" />
 
-        <!-- A simple label for the color selector section. -->
+        <!-- A simple TextView label for the color selector section below it. -->
         <TextView
             android:id="@+id/colorSelectorLabel"
             android:layout_width="wrap_content"
@@ -125,8 +143,8 @@
             app:layout_constraintTop_toBottomOf="@id/addImageButton" />
 
         <!--
-            A HorizontalScrollView allows the color buttons to be scrolled horizontally
-            if they don't all fit on the screen. 'scrollbars="none"' hides the scrollbar.
+            A HorizontalScrollView allows the color buttons to be scrolled horizontally if
+            they don't all fit on the screen. 'scrollbars="none"' hides the visual scrollbar.
         -->
         <HorizontalScrollView
             android:id="@+id/colorSelectorScrollView"
@@ -138,7 +156,7 @@
             app:layout_constraintStart_toStartOf="@id/stickyNoteCard"
             app:layout_constraintTop_toBottomOf="@id/colorSelectorLabel">
 
-            <!-- A LinearLayout to hold all the color selector ImageButtons. -->
+            <!-- This LinearLayout holds the individual color swatch ImageButtons horizontally. -->
             <LinearLayout
                 android:id="@+id/colorSelectorLayout"
                 android:layout_width="wrap_content"
@@ -146,7 +164,9 @@
                 android:orientation="horizontal"
                 android:paddingVertical="8dp">
 
-                <!-- Each ImageButton represents a color choice. -->
+                <!-- Each ImageButton below represents a single color choice. Their IDs are used
+                     in the Kotlin code to set up the OnClickListeners. -->
+
                 <ImageButton
                     android:id="@+id/colorDefault"
                     android:layout_width="48dp"
@@ -154,12 +174,51 @@
                     android:layout_marginHorizontal="8dp"
                     android:background="@drawable/color_selector_default"
                     android:contentDescription="Default Color" />
-                <!-- ... other color buttons ... -->
+
+                <ImageButton
+                    android:id="@+id/colorRed"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@drawable/color_selector_red"
+                    android:contentDescription="Red Color" />
+
+                <ImageButton
+                    android:id="@+id/colorBlue"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@drawable/color_selector_blue"
+                    android:contentDescription="Blue Color" />
+
+                <ImageButton
+                    android:id="@+id/colorOrange"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@drawable/color_selector_orange"
+                    android:contentDescription="Orange Color" />
+
+                <ImageButton
+                    android:id="@+id/colorYellow"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@drawable/color_selector_yellow"
+                    android:contentDescription="Yellow Color" />
+
+                <ImageButton
+                    android:id="@+id/colorGreen"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@drawable/color_selector_green"
+                    android:contentDescription="Green Color" />
 
             </LinearLayout>
         </HorizontalScrollView>
 
-        <!-- Button to open the DatePickerDialog for setting a deadline. -->
+        <!-- This Button opens the DatePickerDialog for setting a task deadline. -->
         <Button
             android:id="@+id/setDeadlineButton"
             android:layout_width="0dp"
@@ -171,9 +230,10 @@
             app:layout_constraintTop_toBottomOf="@id/colorSelectorScrollView" />
 
         <!--
-            This LinearLayout holds the action buttons (Discard, Delete, Save) at the bottom.
-            - It's constrained to the bottom of the parent layout.
-            - 'app:layout_constraintVertical_bias="1.0"' pushes it to the very bottom.
+            This LinearLayout groups the main action buttons (Discard, Delete, Save) at the bottom.
+            - It is constrained to the bottom of the parent layout.
+            - 'app:layout_constraintVertical_bias="1.0"' is a powerful constraint that pushes this
+              view to the very bottom of the available space, ensuring it's always at the end of the form.
         -->
         <LinearLayout
             android:id="@+id/bottomActionLayout"
@@ -189,7 +249,8 @@
             app:layout_constraintTop_toBottomOf="@id/setDeadlineButton"
             app:layout_constraintVertical_bias="1.0">
 
-            <!-- Discard button uses a borderless style. -->
+            <!-- Discard button. 'layout_weight="1"' allows it to share horizontal space equally
+                 with the other buttons in this layout. -->
             <Button
                 android:id="@+id/discardButton"
                 style="?android:attr/buttonBarButtonStyle"
@@ -199,7 +260,7 @@
                 android:layout_weight="1"
                 android:text="Discard" />
 
-            <!-- Delete button is hidden by default and only shown in Edit Mode. -->
+            <!-- Delete button is hidden by default and only shown when editing an existing task. -->
             <Button
                 android:id="@+id/deleteButton"
                 style="?android:attr/buttonBarButtonStyle"
@@ -212,7 +273,7 @@
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <!-- The primary action button (Save/Update). -->
+            <!-- The primary action button (Save/Update). 'backgroundTint' gives it a strong visual emphasis. -->
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="0dp"
