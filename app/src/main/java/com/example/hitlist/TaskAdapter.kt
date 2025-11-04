@@ -77,15 +77,19 @@ class TaskAdapter(
 
         // --- Bind Data to Views ---
         holder.titleTextView.text = task.title
-        holder.descriptionTextView.text = task.description
 
-        // Show or hide the deadline TextView based on whether a deadline exists.
+        holder.descriptionTextView.apply {
+            text = task.description.orEmpty()
+            visibility = if (text.isBlank()) View.GONE else View.VISIBLE
+        }
+
         if (!task.deadline.isNullOrEmpty()) {
             holder.deadlineTextView.visibility = View.VISIBLE
             holder.deadlineTextView.text = "Deadline: ${task.deadline}"
         } else {
             holder.deadlineTextView.visibility = View.GONE
         }
+
 
         // Set the background colors for the card and title bar.
         val lightColorString = task.color ?: "#FFFFFF"
@@ -107,7 +111,7 @@ class TaskAdapter(
                 .load(Uri.parse(task.imageUri))
                 .into(holder.taskImagePreview)
         } else {
-            holder.taskImagePreview.visibility = View.GONE
+            holder.taskImagePreview.visibility = View.INVISIBLE
         }
 
         // --- Set Up Click Listeners ---

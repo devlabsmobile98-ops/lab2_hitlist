@@ -92,8 +92,18 @@ class Homepage : AppCompatActivity() {
      */
     private fun loadTasks() {
         val allTasks = db.getAllTasks()
+
+        // DEBUG: print what we really got back from the DB
+        allTasks.forEachIndexed { i, t ->
+            android.util.Log.d(
+                "HITLIST/DB",
+                "[$i] id=${t.id} title='${t.title}' desc='${t.description}' deadline='${t.deadline}' image=${t.imageUri}"
+            )
+        }
+
         taskAdapter.updateTasks(allTasks)
     }
+
 
     /**
      * Sets up a listener on the search EditText to filter the task list in real-time as the user types.
