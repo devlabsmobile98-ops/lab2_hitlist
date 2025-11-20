@@ -4,116 +4,136 @@ package com.example.hitlist
 // Import necessary classes from the Android SDK and other libraries.
 import android.app.Activity
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.sqrt
 
 /**
  * The Homepage activity serves as the main screen of the application.
- * It displays a list of all saved tasks and provides functionality for searching,
- * creating new tasks, and navigating to the detail view for editing.
+ * It implements SensorEventListener to detect shake gestures.
  */
-class Homepage : AppCompatActivity() {
+class Homepage : AppCompatActivity(), SensorEventListener {
 
-    // 'private lateinit' properties are initialized later, typically in onCreate.
-    // This avoids making them nullable.
-
-    // A reference to the database helper class to interact with the SQLite database.
     private lateinit var db: TaskDatabaseHelper
-    // The adapter that manages the data and provides views for the RecyclerView.
     private lateinit var taskAdapter: TaskAdapter
-    // The UI element that displays the scrollable list of tasks.
     private lateinit var tasksRecyclerView: RecyclerView
-    // The input field for filtering tasks by title.
     private lateinit var searchEditText: EditText
 
-    /**
-     * The ActivityResultLauncher is the modern and recommended way to handle results from activities
-     * that you start. When TaskDetailActivity finishes, this launcher receives the result.
-     * If the result is RESULT_OK, it means a task was created, updated, or deleted,
-     * so we need to refresh the list of tasks on this screen.
-     */
+    // --- SENSOR-RELATED PROPERTIES ---
+    private lateinit var sensorManager: SensorManager
+    private var accelerometer: Sensor? = null
+
+    // Shake detection variables
+    private var acceleration = 0f
+    private var currentAcceleration = SensorManager.GRAVITY_EARTH
+    private var lastAcceleration = SensorManager.GRAVITY_EARTH
+    private val shakeThreshold = 5f
+
     private val taskDetailResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        // Check if the activity that finished (TaskDetailActivity) returned a successful result.
         if (result.resultCode == Activity.RESULT_OK) {
-            // If so, reload all tasks from the database to reflect the changes.
             loadTasks()
         }
     }
 
-    /**
-     * The onCreate method is the entry point for the activity's lifecycle.
-     * It's where you perform one-time initializations, such as setting up the UI.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Set the XML layout file for this activity.
         setContentView(R.layout.activity_homepage)
 
-        // Initialize the database helper.
         db = TaskDatabaseHelper(this)
-        // Find and assign UI components from the layout file to their corresponding variables.
         tasksRecyclerView = findViewById(R.id.tasksRecyclerView)
         searchEditText = findViewById(R.id.searchView)
         val addNewTaskButton: Button = findViewById(R.id.addNewTaskButton)
 
-        // Set the layout manager for the RecyclerView. LinearLayoutManager arranges items in a vertical list.
-        tasksRecyclerView.layoutManager = LinearLayoutManager(this)
+        // --- INITIALIZE THE SENSOR MANAGER & SENSORS ---
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        // Get the default accelerometer
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        // Initialize the TaskAdapter with an empty list, the db helper, and the result launcher.
-        // The adapter will be populated with data later in loadTasks().
+        // Log if accelerometer is not found
+        if (accelerometer == null) { Log.e("SensorError", "This device does not have an accelerometer.") }
+
+        tasksRecyclerView.layoutManager = LinearLayoutManager(this)
         taskAdapter = TaskAdapter(mutableListOf(), db, taskDetailResultLauncher)
-        // Connect the RecyclerView with its adapter.
         tasksRecyclerView.adapter = taskAdapter
 
-        // Perform the initial load of tasks from the database.
         loadTasks()
 
-        // Set up the click listener for the "Add New Task" button.
         addNewTaskButton.setOnClickListener {
-            // Create an intent to open the TaskDetailActivity for creating a *new* task.
             val intent = Intent(this, TaskDetailActivity::class.java)
-            // Launch the activity using our result launcher to handle the outcome.
             taskDetailResultLauncher.launch(intent)
         }
 
-        // Set up the search functionality.
         setupSearch()
     }
 
-    /**
-     * Fetches all tasks from the database and tells the adapter to update the RecyclerView.
-     */
     private fun loadTasks() {
         val allTasks = db.getAllTasks()
         taskAdapter.updateTasks(allTasks)
     }
 
-    /**
-     * Sets up a listener on the search EditText to filter the task list in real-time as the user types.
-     */
     private fun setupSearch() {
         searchEditText.addTextChangedListener(object : TextWatcher {
-            // These methods are required by the interface but are not needed for this implementation.
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            /**
-             * This method is called after the text in the EditText has changed.
-             */
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString()
-                // Perform a search in the database using the current query text.
                 val filteredTasks = db.searchTasks(query)
-                // Update the adapter with the filtered list of tasks.
                 taskAdapter.updateTasks(filteredTasks)
             }
         })
+    }
+
+    // --- SENSOR LISTENER METHODS ---
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        // Ensure the event is not null and is specifically from the accelerometer.
+        if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+            lastAcceleration = currentAcceleration
+            currentAcceleration = sqrt(x * x + y * y + z * z)
+            val delta = currentAcceleration - lastAcceleration
+            acceleration = acceleration * 0.9f + delta
+
+            if (acceleration > shakeThreshold) {
+                Log.d("ShakeDebug", "Shake Detected! Launching New Task screen.")
+                val intent = Intent(this, TaskDetailActivity::class.java)
+                taskDetailResultLauncher.launch(intent)
+                acceleration = 0f // Reset after shake
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // Not used.
+    }
+
+    // --- REGISTER AND UNREGISTER THE LISTENER ---
+
+    override fun onResume() {
+        super.onResume()
+        // Register the accelerometer listener.
+        accelerometer?.also { acc ->
+            sensorManager.registerListener(this, acc, SensorManager.SENSOR_DELAY_UI)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Unregister the listener to save battery.
+        sensorManager.unregisterListener(this)
     }
 }
