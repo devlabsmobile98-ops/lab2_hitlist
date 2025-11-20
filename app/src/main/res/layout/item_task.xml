@@ -28,7 +28,8 @@
 
         <!--
             The ImageView for the task's image preview.
-            - It is constrained to the bottom and end (right) of the parent CardView.
+            - It is constrained to the right of the content layout so that when it's GONE,
+              the content expands to full width; when it's VISIBLE, it docks on the right.
             - 'android:visibility="gone"' makes it hidden by default. It will be made
               visible programmatically in the TaskAdapter if the task has an image.
             - 'tools:visibility="visible"' is a design-time attribute that makes the view
@@ -39,18 +40,20 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="8dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:adjustViewBounds="true"
+            app:layout_constraintStart_toEndOf="@id/contentLayout"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/contentLayout"
+            app:layout_constraintBottom_toBottomOf="@id/contentLayout"
             tools:src="@tools:sample/avatars"
             tools:visibility="visible" />
 
         <!--
             This LinearLayout serves as the colored title bar for the task.
-            - Its bottom is constrained to the TOP of the image preview. This is the
-              critical constraint that prevents overlap and ensures the card expands
-              vertically to fit the image.
+            - It is anchored to the TOP of the parent only (not to the image) so it never steals
+              vertical space when the image is GONE.
             - The 'layout_marginBottom' creates a visual space between the title bar
               and the content area below it.
         -->
@@ -63,9 +66,8 @@
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/taskImagePreview"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0">
 
@@ -101,20 +103,19 @@
             This LinearLayout holds the description and deadline text.
             - 'layout_height="0dp"' allows it to fill the constrained space.
             - It is constrained between the bottom of the titleBar and the bottom of the parent.
-            - Its end is constrained to the start of the image preview, ensuring the text
-              wraps and never overlaps with the image.
+            - It spans the full width (start/end to parent). The image docks to its right when visible.
         -->
         <LinearLayout
             android:id="@+id/contentLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:gravity="center_vertical"
+            android:gravity="top"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/taskImagePreview"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/taskImagePreview"
             app:layout_constraintTop_toBottomOf="@id/titleBar">
 
             <!-- TextView for the task's description. -->
@@ -122,6 +123,7 @@
                 android:id="@+id/taskDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
                 tools:text="This is the description of the task." />
